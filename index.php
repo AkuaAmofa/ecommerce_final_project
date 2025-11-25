@@ -4,8 +4,8 @@ require_once 'settings/core.php';
 require_once 'controllers/category_controller.php';
 require_once 'controllers/brand_controller.php';
 
-$logged_in = isLoggedIn();
-$is_admin  = isAdmin();
+$logged_in  = isLoggedIn();
+$is_admin   = isAdmin();
 $categories = get_all_categories_ctr();
 $brands     = get_all_brands_ctr();
 ?>
@@ -14,58 +14,123 @@ $brands     = get_all_brands_ctr();
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Home | MyShop</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
-<body class="bg-light">
+  <title>EventLink | Discover & Book Events Across Ghana</title>
 
-<!-- Navigation -->
-<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm">
-  <div class="container">
-    <a class="navbar-brand fw-bold" href="index.php">MyShop</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMenu">
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg bg-white shadow-sm el-navbar">
+  <div class="container py-2">
+
+    <a class="navbar-brand d-flex align-items-center gap-2" href="index.php">
+      <div class="el-footer-logo" style="border-radius:50%;">E</div>
+      <div class="d-flex flex-column lh-1">
+        <span class="fw-bold el-navy">EventLink</span>
+        <small class="text-muted">Connecting Ghana's Events Digitally</small>
+      </div>
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarMenu">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+    <div class="collapse navbar-collapse justify-content-between" id="mainNav">
+
+      <!-- Center menu -->
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link el-nav-link" href="index.php">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link el-nav-link" href="view/all_product.php">Events</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link el-nav-link" href="view/about.php">About</a>
+        </li>
+      </ul>
+
+      <!-- Right menu -->
+      <ul class="navbar-nav mb-2 mb-lg-0">
         <?php if (!$logged_in): ?>
-          <li class="nav-item"><a class="nav-link" href="login/register.php">Register</a></li>
-          <li class="nav-item"><a class="nav-link" href="login/login.php">Login</a></li>
+          <li class="nav-item me-2">
+            <a href="login/login.php" class="btn btn-link text-decoration-none el-navy fw-semibold">Login</a>
+          </li>
+          <li class="nav-item">
+            <a href="login/register.php" class="btn el-btn-gold px-4 rounded-3">Sign Up</a>
+          </li>
         <?php else: ?>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="nav-link dropdown-toggle el-nav-link fw-semibold" href="#" data-bs-toggle="dropdown">
               <?= htmlspecialchars($_SESSION['name']); ?>
             </a>
-            <ul class="dropdown-menu">
+
+            <ul class="dropdown-menu dropdown-menu-end">
               <li><a class="dropdown-item text-danger" href="login/logout.php">Logout</a></li>
+
               <?php if ($is_admin): ?>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="admin/category.php">Manage Categories</a></li>
                 <li><a class="dropdown-item" href="admin/brand.php">Manage Brands</a></li>
-                <li><a class="dropdown-item" href="admin/product.php">Manage Products</a></li>
+                <li><a class="dropdown-item" href="admin/product.php">Manage Events</a></li>
               <?php endif; ?>
             </ul>
           </li>
         <?php endif; ?>
-
-        <li class="nav-item"><a class="nav-link" href="view/all_product.php">All Products</a></li>
       </ul>
 
-      <!-- Search form -->
-      <form class="d-flex" role="search" action="view/product_search_result.php" method="get">
-        <input class="form-control me-2" type="search" name="q" placeholder="Search products..." aria-label="Search">
-        <button class="btn btn-outline-primary" type="submit">Search</button>
-      </form>
     </div>
   </div>
 </nav>
 
-<!-- Quick Filters -->
-<div class="bg-white border-bottom">
-  <div class="container py-2">
+
+<!-- HERO SECTION -->
+<section
+  class="hero-section d-flex align-items-center justify-content-center text-center"
+  style="background-image:url('https://images.unsplash.com/photo-1703764884882-2edc8c4961bc?auto=format&fit=crop&w=1600&q=80');"
+>
+  <div class="hero-overlay"></div>
+
+  <div class="container hero-content">
+    <h1 class="display-5 fw-bold mb-3 text-white">
+      Discover &amp; Book Events Across Ghana
+    </h1>
+
+    <p class="lead mb-4 text-white-50">
+      Find concerts, conferences, and festivals all in one place.
+    </p>
+
+    <!-- Search bar -->
+    <form class="hero-search-wrapper mb-3" method="get" action="view/product_search_result.php">
+      <input
+        type="text"
+        name="q"
+        class="form-control form-control-lg"
+        placeholder="Search events, artists, or locations..."
+        required
+      >
+      <button type="submit" class="btn el-btn-gold px-4 rounded-pill">Search</button>
+    </form>
+
+    <div class="d-flex justify-content-center gap-3 mt-3">
+      <a href="view/all_product.php" class="btn el-btn-gold px-4 rounded-3">Explore Events</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- QUICK FILTERS -->
+<section class="bg-white border-top">
+  <div class="container py-4">
+    <h6 class="mb-3 el-navy">Quick Filters</h6>
+
     <form class="row g-2" action="view/product_search_result.php" method="get">
-      <div class="col-md-5 col-sm-12">
+      <div class="col-md-5">
         <select name="cat" class="form-select">
           <option value="">Filter by Category</option>
           <?php foreach ($categories as $cat): ?>
@@ -73,38 +138,122 @@ $brands     = get_all_brands_ctr();
           <?php endforeach; ?>
         </select>
       </div>
-      <div class="col-md-5 col-sm-12">
+
+      <div class="col-md-5">
         <select name="brand" class="form-select">
-          <option value="">Filter by Brand</option>
+          <option value="">Filter by Organizer/Brand</option>
           <?php foreach ($brands as $brand): ?>
             <option value="<?= $brand['brand_id'] ?>"><?= htmlspecialchars($brand['brand_name']) ?></option>
           <?php endforeach; ?>
         </select>
       </div>
-      <div class="col-md-2 col-sm-12 d-grid">
-        <button type="submit" class="btn btn-primary">Go</button>
+
+      <div class="col-md-2 d-grid">
+        <button type="submit" class="btn el-btn-gold">Go</button>
       </div>
     </form>
   </div>
-</div>
+</section>
 
-<!-- Main Content -->
-<div class="container text-center py-5">
-  <h1 class="mb-3">Welcome to MyShop</h1>
 
-  <?php if ($logged_in): ?>
-    <p class="text-muted">Logged in as <strong><?= htmlspecialchars($_SESSION['email']); ?></strong>.</p>
-    <?php if ($is_admin): ?>
-      <p><a href="admin/product.php" class="btn btn-success">Go to Admin Dashboard</a></p>
-    <?php else: ?>
-      <p><a href="view/all_product.php" class="btn btn-primary">Start Shopping</a></p>
-    <?php endif; ?>
-  <?php else: ?>
-    <p class="text-muted">Please register or log in to start shopping.</p>
-    <a href="login/register.php" class="btn btn-outline-primary me-2">Register</a>
-    <a href="login/login.php" class="btn btn-outline-secondary">Login</a>
-  <?php endif; ?>
-</div>
+<!-- WHY CHOOSE EVENTLINK -->
+<section class="py-5 bg-white">
+  <div class="container">
+
+    <h5 class="text-center el-navy mb-5">Why Choose EventLink?</h5>
+
+    <div class="row text-center g-4">
+
+      <div class="col-md-4">
+        <div class="why-icon-wrap">
+          <img src="https://img.icons8.com/ios-filled/50/search--v1.png" width="28">
+        </div>
+        <h6 class="fw-semibold el-navy">Easy Discovery</h6>
+        <p class="text-muted">Find events that match your interests with our smart search and filtering.</p>
+      </div>
+
+      <div class="col-md-4">
+        <div class="why-icon-wrap">
+          <img src="https://img.icons8.com/ios-filled/50/money-transfer.png" width="28">
+        </div>
+        <h6 class="fw-semibold el-navy">Secure Payments</h6>
+        <p class="text-muted">Book tickets safely with mobile money and card payment options.</p>
+      </div>
+
+      <div class="col-md-4">
+        <div class="why-icon-wrap">
+          <img src="https://img.icons8.com/ios-filled/50/approval.png" width="28">
+        </div>
+        <h6 class="fw-semibold el-navy">Trusted Platform</h6>
+        <p class="text-muted">Connect with verified organizers and authentic events.</p>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer class="el-footer pt-5 pb-3 mt-4">
+  <div class="container">
+
+    <div class="row mb-4">
+
+      <div class="col-md-4 mb-3">
+        <div class="d-flex align-items-center mb-3">
+          <div class="el-footer-logo">E</div>
+          <div class="ms-2">
+            <div class="fw-semibold">EventLink</div>
+            <small>Connecting Ghana's Events Digitally</small>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <h6 class="fw-semibold mb-3">Quick Links</h6>
+        <ul class="list-unstyled">
+          <li><a href="index.php">Home</a></li>
+          <li><a href="view/all_product.php">Browse Events</a></li>
+          <li><a href="view/about.php">About Us</a></li>
+        </ul>
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <h6 class="fw-semibold mb-3">For Organizers</h6>
+        <ul class="list-unstyled">
+          <li>Create Event</li>
+          <li>Dashboard</li>
+          <li>Pricing</li>
+        </ul>
+      </div>
+
+      <div class="col-md-2 mb-3">
+        <h6 class="fw-semibold mb-3">Connect</h6>
+        <div class="d-flex">
+          <div class="footer-icon">f</div>
+          <div class="footer-icon">t</div>
+          <div class="footer-icon">in</div>
+        </div>
+      </div>
+
+    </div>
+
+    <hr class="border-secondary">
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center pt-2">
+      <small>© 2025 EventLink | Powered by ADF Support</small>
+
+      <div class="mt-2 mt-md-0">
+        <a href="#">Privacy Policy</a>
+        <span class="mx-2">|</span>
+        <a href="#">Terms of Service</a>
+      </div>
+    </div>
+
+  </div>
+</footer>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
