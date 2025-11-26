@@ -1,0 +1,47 @@
+/* ========================================
+   HOMEPAGE SPECIFIC STYLES (home.css)
+   Only loaded on index.php
+   ======================================== */
+
+/* Mobile-first enhancements */
+@media (max-width: 768px) {
+  /* Hide quick filters on mobile */
+  .bg-white.border-top {
+    display: none !important;
+  }
+  
+  /* Optimize hero for mobile */
+  .hero-section {
+    min-height: 520px;
+    padding: 2rem 1rem;
+  }
+  
+  .hero-content h1 {
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+  
+  .hero-content .lead {
+    font-size: 1rem;
+  }
+  
+  /* Why Choose section mobile */
+  .why-icon-wrap {
+    margin-bottom: 1rem;
+  }
+  
+  .why-icon-wrap + h6 {
+    font-size: 1.1rem;
+  }
+}
+
+/* Desktop enhancements */
+@media (min-width: 769px) {
+  .why-icon-wrap {
+    transition: transform 0.3s;
+  }
+  
+  .why-icon-wrap:hover {
+    transform: scale(1.1);
+  }
+}

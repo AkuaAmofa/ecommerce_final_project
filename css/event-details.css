@@ -1,0 +1,155 @@
+/* ========================================
+   EVENT DETAILS PAGE STYLES (event-details.css)
+   Only loaded on single_product.php
+   ======================================== */
+
+/* Hero Section */
+.event-hero-section {
+  height: 400px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+  margin-bottom: 3rem;
+  background-color: var(--el-navy);
+}
+
+.event-hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.1) 100%);
+}
+
+/* Details Container */
+.event-details-container {
+  margin-top: -100px;
+  position: relative;
+  z-index: 10;
+}
+
+/* Back Button */
+.btn-back {
+  background-color: transparent;
+  color: var(--el-navy);
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.5rem 1.25rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  text-decoration: none;
+}
+
+.btn-back:hover {
+  background-color: var(--el-light-gray);
+  border-color: var(--el-navy);
+  color: var(--el-navy);
+}
+
+/* Event Details Card */
+.event-details-card {
+  background: var(--el-white);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+#eventContent h2 {
+  color: var(--el-navy);
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+#eventContent .text-muted {
+  color: var(--el-text-muted);
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+#eventContent img {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+
+#eventContent p {
+  color: var(--el-text-muted);
+  line-height: 1.8;
+}
+
+/* Sidebar Price Card */
+#eventSidebar .card {
+  background: var(--el-white);
+  border: none;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  position: sticky;
+  top: 100px;
+}
+
+#eventSidebar h4 {
+  color: var(--el-gold);
+  font-weight: 700;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+#eventSidebar .btn {
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+/* Similar Events Section */
+.similar-events-section {
+  margin-top: 4rem;
+  padding-top: 3rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.similar-events-section h5 {
+  color: var(--el-navy);
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .event-hero-section {
+    height: 300px;
+  }
+  
+  .event-details-container {
+    margin-top: 0;
+  }
+  
+  #eventSidebar .card {
+    position: static;
+    margin-top: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .event-hero-section {
+    height: 250px;
+  }
+  
+  .event-details-card {
+    padding: 1.5rem;
+  }
+  
+  #eventContent h2 {
+    font-size: 1.75rem;
+  }
+}

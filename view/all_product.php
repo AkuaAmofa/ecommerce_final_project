@@ -17,6 +17,7 @@ $brands     = get_all_brands_ctr();
   <title>Discover Events | EventLink</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/events.css">
 </head>
 <body>
 
@@ -185,7 +186,6 @@ $brands     = get_all_brands_ctr();
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="../js/product.js"></script>
-</script>
+<script src="../js/frontend_product.js"></script>
 </body>
 </html>

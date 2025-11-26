@@ -21,6 +21,7 @@ $brands     = get_all_brands_ctr();
 
   <!-- Custom CSS -->
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/home.css">
 </head>
 <body>
 
