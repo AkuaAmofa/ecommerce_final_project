@@ -3,11 +3,28 @@
    Only loaded on cart.php
    ======================================== */
 
+/* Body Layout - Push footer to bottom */
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+body > .container {
+  flex: 1;
+}
+
 /* Cart Container */
 .container.py-4 {
   max-width: 1140px;
   padding-top: 2.5rem !important;
-  padding-bottom: 2.5rem !important;
+  padding-bottom: 5rem !important;
+  min-height: calc(100vh - 400px);
+}
+
+/* Footer Spacing */
+.el-footer {
+  margin-top: 8rem !important;
 }
 
 /* Cart Header */

@@ -43,7 +43,12 @@ $(document).ready(function () {
                         text: response.message,
                     }).then((result) => {
                         if (result.isConfirmed) {
-                            window.location.href = '../index.php'; // redirect to homepage
+                            // Redirect based on user role
+                            if (response.is_admin) {
+                                window.location.href = '../admin/dashboard.php'; // Admin dashboard
+                            } else {
+                                window.location.href = '../index.php'; // Customer homepage
+                            }
                         }
                     });
                 } else {

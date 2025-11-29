@@ -34,12 +34,15 @@ try {
     // Subtotal and total quantity
     $subtotal = 0.0;
     $totalQty = 0;
-    foreach ($items as $it) {
+    foreach ($items as &$it) {
         $price = (float)($it['product_price'] ?? 0);
         $qty   = (int)($it['qty'] ?? 0);
-        $subtotal += $price * $qty;
+        $itemSubtotal = $price * $qty;
+        $it['subtotal'] = $itemSubtotal; // Add subtotal to each item
+        $subtotal += $itemSubtotal;
         $totalQty += $qty;
     }
+    unset($it); // Break reference
 
     echo json_encode([
         'status' => 'success',

@@ -33,15 +33,26 @@ if ($cat_id <= 0) {
 }
 
 // Step 4: Call controller
-$result = delete_category_ctr($cat_id);
+try {
+    $result = delete_category_ctr($cat_id);
 
-// Step 5: Return response
-if ($result) {
-    $response['status'] = 'success';
-    $response['message'] = 'Category deleted successfully';
-} else {
+    // Step 5: Return response
+    if ($result) {
+        $response['status'] = 'success';
+        $response['message'] = 'Category deleted successfully';
+    } else {
+        $response['status'] = 'error';
+        $response['message'] = 'Failed to delete category. It may have associated brands or products.';
+    }
+} catch (Exception $e) {
     $response['status'] = 'error';
-    $response['message'] = 'Failed to delete category';
+    // Check if it's a foreign key constraint error
+    if (strpos($e->getMessage(), 'foreign key constraint') !== false ||
+        strpos($e->getMessage(), '1451') !== false) {
+        $response['message'] = 'Cannot delete category. Please delete all associated brands and products first.';
+    } else {
+        $response['message'] = 'Server error: ' . $e->getMessage();
+    }
 }
 
 echo json_encode($response);

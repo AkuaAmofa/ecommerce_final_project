@@ -41,6 +41,8 @@ if ($user) {
 
     $response['status']  = 'success';
     $response['message'] = 'Login successful';
+    $response['role']    = $user['user_role']; // Return role for redirect
+    $response['is_admin'] = ($user['user_role'] == 1); // 1 = admin
 } else {
     $response['status']  = 'error';
     $response['message'] = 'Invalid email or password';
