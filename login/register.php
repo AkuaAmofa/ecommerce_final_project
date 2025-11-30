@@ -128,7 +128,7 @@ if (isset($_SESSION['user_id'])) {
           </div>
           <div class="form-check form-check-inline">
             <input class="form-check-input" type="radio" name="role" id="admin" value="1">
-            <label class="form-check-label" for="admin">Admin</label>
+            <label class="form-check-label" for="admin">Organizer</label>
           </div>
         </div>
 
