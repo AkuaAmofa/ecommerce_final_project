@@ -11,10 +11,13 @@ if (!isLoggedIn() || !isAdmin()) {
     exit();
 }
 
-// Retrieve existing categories, brands, and products
-$categories = get_all_categories_ctr();
-$brands     = get_all_brands_ctr();
-$products   = get_all_products_ctr();
+// Get logged-in user ID
+$user_id = $_SESSION['user_id'] ?? 0;
+
+// Retrieve categories, brands, and products filtered by organizer
+$categories = get_categories_by_organizer_ctr($user_id);
+$brands     = get_brands_by_organizer_ctr($user_id);
+$products   = get_products_by_organizer_ctr($user_id);
 ?>
 
 <!DOCTYPE html>
@@ -148,6 +151,12 @@ $products   = get_all_products_ctr();
         <a href="analytics.php" class="sidebar-item">
           <span>📈</span> Analytics
         </a>
+        <a href="payment_requests.php" class="sidebar-item">
+          <span>💰</span> Payment Requests
+        </a>
+        <a href="payment_approvals.php" class="sidebar-item">
+          <span>✅</span> Payment Approvals
+        </a>
       </div>
     </div>
 
@@ -187,9 +196,16 @@ $products   = get_all_products_ctr();
         <input type="text" id="product_title" name="product_title" class="form-control" required>
       </div>
 
-      <div class="mb-3">
-        <label for="product_price" class="form-label">Price (GHS)</label>
-        <input type="number" step="0.01" id="product_price" name="product_price" class="form-control" required>
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <label for="product_price" class="form-label">Price (GHS)</label>
+          <input type="number" step="0.01" id="product_price" name="product_price" class="form-control" required>
+        </div>
+        <div class="col-md-6">
+          <label for="ticket_quantity" class="form-label">Number of Tickets Available</label>
+          <input type="number" id="ticket_quantity" name="ticket_quantity" class="form-control" min="0" required>
+          <small class="text-muted">Total number of tickets for this event</small>
+        </div>
       </div>
 
       <div class="mb-3">
@@ -219,6 +235,12 @@ $products   = get_all_products_ctr();
       </div>
 
       <div class="mb-3">
+        <label for="organizer_name" class="form-label">Organizer Name</label>
+        <input type="text" id="organizer_name" name="organizer_name" class="form-control" placeholder="e.g. Detty Ent, Eazi Productions" required>
+        <small class="text-muted">This name will be displayed to event attendees</small>
+      </div>
+
+      <div class="mb-3">
         <label for="product_image" class="form-label">Product Image</label>
         <input type="file" id="product_image" name="product_image" class="form-control">
         <small class="text-muted">Allowed formats: JPG, PNG, GIF, WEBP.</small>
@@ -239,6 +261,7 @@ $products   = get_all_products_ctr();
           <th>Category</th>
           <th>Brand</th>
           <th>Price (GHS)</th>
+          <th>Tickets Left</th>
           <th>Image</th>
           <th>Actions</th>
         </tr>
@@ -253,6 +276,13 @@ $products   = get_all_products_ctr();
               <td><?= htmlspecialchars($p['brand_name']); ?></td>
               <td><?= number_format($p['product_price'], 2); ?></td>
               <td class="text-center">
+                <?php
+                  $qty = $p['ticket_quantity'] ?? 0;
+                  $color = $qty == 0 ? 'text-danger' : ($qty <= 5 ? 'text-warning' : 'text-success');
+                ?>
+                <span class="<?= $color ?>"><strong><?= $qty ?></strong></span>
+              </td>
+              <td class="text-center">
                 <?php if (!empty($p['product_image'])): ?>
                   <img src="../uploads/<?= htmlspecialchars($p['product_image']); ?>" alt="Product" style="width:60px;height:60px;object-fit:cover;">
                 <?php else: ?>
@@ -264,13 +294,15 @@ $products   = get_all_products_ctr();
                         data-id="<?= $p['product_id']; ?>"
                         data-title="<?= htmlspecialchars($p['product_title']); ?>"
                         data-price="<?= $p['product_price']; ?>"
+                        data-qty="<?= $p['ticket_quantity'] ?? 0; ?>"
                         data-desc="<?= htmlspecialchars($p['product_desc']); ?>"
                         data-keywords="<?= htmlspecialchars($p['product_keywords']); ?>"
                         data-cat="<?= $p['product_cat']; ?>"
                         data-brand="<?= $p['product_brand']; ?>"
                         data-location="<?= htmlspecialchars($p['product_location'] ?? ''); ?>"
                         data-date="<?= htmlspecialchars($p['event_date'] ?? ''); ?>"
-                        data-time="<?= htmlspecialchars($p['event_time'] ?? ''); ?>">
+                        data-time="<?= htmlspecialchars($p['event_time'] ?? ''); ?>"
+                        data-organizer="<?= htmlspecialchars($p['organizer_name'] ?? ''); ?>">
                         Edit
                 </button>
 

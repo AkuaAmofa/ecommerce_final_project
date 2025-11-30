@@ -9,12 +9,15 @@ $product_cat      = $_POST['product_cat'] ?? '';
 $product_brand    = $_POST['product_brand'] ?? '';
 $product_title    = trim($_POST['product_title'] ?? '');
 $product_price    = $_POST['product_price'] ?? '';
+$ticket_quantity  = (int)($_POST['ticket_quantity'] ?? 0);
 $product_desc     = trim($_POST['product_desc'] ?? '');
 $product_keywords = trim($_POST['product_keywords'] ?? '');
 $product_image    = $_POST['product_image'] ?? ''; // from uploads
 $product_location = trim($_POST['product_location'] ?? '');
 $event_date       = $_POST['event_date'] ?? '';
 $event_time       = $_POST['event_time'] ?? '';
+$organizer_name   = trim($_POST['organizer_name'] ?? '');
+$organizer_id     = $_SESSION['user_id'] ?? 0; // Get logged-in user ID
 
 // If file was directly uploaded (not via AJAX)
 if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] === UPLOAD_ERR_OK) {
@@ -76,7 +79,10 @@ $result = add_product_ctr(
     $product_keywords,
     $product_location,
     $event_date,
-    $event_time
+    $event_time,
+    $organizer_id,
+    $organizer_name,
+    $ticket_quantity
 );
 
 if ($result) {

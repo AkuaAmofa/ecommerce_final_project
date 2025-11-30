@@ -26,8 +26,9 @@ if ($_SESSION['role'] != 1) {
     exit();
 }
 
-//Step 3: Fetch all categories
-$categories = get_all_categories_ctr();
+//Step 3: Fetch categories for this organizer only
+$organizer_id = $_SESSION['user_id'] ?? 0;
+$categories = get_categories_by_organizer_ctr($organizer_id);
 
 if ($categories) {
     $response['status'] = 'success';

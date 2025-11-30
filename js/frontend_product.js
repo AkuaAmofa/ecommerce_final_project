@@ -188,8 +188,11 @@ $(function () {
         }
 
         let eventDetailsHtml = '';
-        if (eventDateDisplay || eventTimeDisplay || locationDisplay) {
+        if (eventDateDisplay || eventTimeDisplay || locationDisplay || p.organizer_name) {
           eventDetailsHtml = '<div class="event-meta-info mb-4 p-3 bg-light rounded">';
+          if (p.organizer_name) {
+            eventDetailsHtml += `<p class="mb-2"><strong>🎭 Organized by:</strong> ${escapeHtml(p.organizer_name)}</p>`;
+          }
           if (eventDateDisplay) {
             eventDetailsHtml += `<p class="mb-2"><strong>📅 Date:</strong> ${eventDateDisplay}</p>`;
           }
@@ -212,12 +215,23 @@ $(function () {
         $('#eventContent').html(html);
 
         const priceDisplay = Number(p.product_price) === 0 ? 'Free' : 'GHS ' + Number(p.product_price).toFixed(2);
-        
+
+        // Check ticket availability
+        const ticketsLeft = p.ticket_quantity || 0;
+        let ticketWarning = '';
+
+        if (ticketsLeft === 0) {
+          ticketWarning = '<div class="alert alert-danger mb-3"><strong>SOLD OUT!</strong> No tickets available.</div>';
+        } else if (ticketsLeft <= 5) {
+          ticketWarning = `<div class="alert alert-warning mb-3"><strong>⚠️ Almost Sold Out!</strong> Only ${ticketsLeft} ticket${ticketsLeft > 1 ? 's' : ''} left!</div>`;
+        }
+
         const sidebar = `
             <div class="card">
                 <h4>${priceDisplay}</h4>
                 <p class="text-muted mb-3">${escapeHtml(p.product_title)}</p>
-                <button class="btn el-btn-gold" onclick="addToCart(${p.product_id})">Buy Ticket</button>
+                ${ticketWarning}
+                ${ticketsLeft > 0 ? `<button class="btn el-btn-gold" onclick="addToCart(${p.product_id})">Buy Ticket</button>` : '<button class="btn btn-secondary" disabled>Sold Out</button>'}
             </div>`;
         $('#eventSidebar').html(sidebar);
 

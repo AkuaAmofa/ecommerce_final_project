@@ -12,11 +12,12 @@ if (!isAdmin()) {
 
 /**
  * Return both:
- *  - brands (flat list with brand_cat & cat_name)
- *  - categories (id+name) to populate the dropdown
+ *  - brands (flat list with brand_cat & cat_name) - filtered by organizer
+ *  - categories (id+name) to populate the dropdown - filtered by organizer
  */
-$brands = get_all_brands_ctr();
-$cats   = get_all_categories_ctr();
+$organizer_id = $_SESSION['user_id'] ?? 0;
+$brands = get_brands_by_organizer_ctr($organizer_id);
+$cats   = get_categories_by_organizer_ctr($organizer_id);
 
 echo json_encode([
     'status' => 'success',

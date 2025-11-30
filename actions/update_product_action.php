@@ -14,12 +14,15 @@ $product_cat  = isset($_POST['product_cat']) ? intval($_POST['product_cat']) : 0
 $product_brand= isset($_POST['product_brand']) ? intval($_POST['product_brand']) : 0;
 $title        = isset($_POST['product_title']) ? trim($_POST['product_title']) : '';
 $price        = isset($_POST['product_price']) ? floatval($_POST['product_price']) : 0.0;
+$ticket_quantity = isset($_POST['ticket_quantity']) ? intval($_POST['ticket_quantity']) : 0;
 $desc         = isset($_POST['product_desc']) ? trim($_POST['product_desc']) : '';
 $keywords     = isset($_POST['product_keywords']) ? trim($_POST['product_keywords']) : '';
 $image        = $_POST['product_image'] ?? ''; // from upload or existing filename
 $location     = isset($_POST['product_location']) ? trim($_POST['product_location']) : '';
 $event_date   = $_POST['event_date'] ?? '';
 $event_time   = $_POST['event_time'] ?? '';
+$organizer_name = isset($_POST['organizer_name']) ? trim($_POST['organizer_name']) : '';
+$organizer_id   = $_SESSION['user_id'] ?? 0;
 
 // Basic validation
 if ($product_id <= 0 || empty($title) || $price <= 0) {
@@ -71,7 +74,7 @@ if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] === UPL
 }
 
 // Run update query via controller
-$result = update_product_ctr($product_id, $product_cat, $product_brand, $title, $price, $desc, $image, $keywords, $location, $event_date, $event_time);
+$result = update_product_ctr($product_id, $product_cat, $product_brand, $title, $price, $desc, $image, $keywords, $location, $event_date, $event_time, $organizer_id, $organizer_name, $ticket_quantity);
 
 if ($result) {
     echo json_encode([

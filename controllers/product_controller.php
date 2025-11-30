@@ -4,17 +4,17 @@ require_once dirname(__DIR__) . '/classes/product_class.php';
 /**
  * Add a new product
  */
-function add_product_ctr($cat_id, $brand_id, $title, $price, $desc, $image, $keywords, $location, $event_date, $event_time) {
+function add_product_ctr($cat_id, $brand_id, $title, $price, $desc, $image, $keywords, $location, $event_date, $event_time, $organizer_id, $organizer_name, $ticket_quantity = 0) {
     $product = new product_class();
-    return $product->add_product($cat_id, $brand_id, $title, $price, $desc, $image, $keywords, $location, $event_date, $event_time);
+    return $product->add_product($cat_id, $brand_id, $title, $price, $desc, $image, $keywords, $location, $event_date, $event_time, $organizer_id, $organizer_name, $ticket_quantity);
 }
 
 /**
  * Update an existing product
  */
-function update_product_ctr($product_id, $cat_id, $brand_id, $title, $price, $desc, $image, $keywords, $location, $event_date, $event_time) {
+function update_product_ctr($product_id, $cat_id, $brand_id, $title, $price, $desc, $image, $keywords, $location, $event_date, $event_time, $organizer_id, $organizer_name, $ticket_quantity = 0) {
     $product = new product_class();
-    return $product->update_product($product_id, $cat_id, $brand_id, $title, $price, $desc, $image, $keywords, $location, $event_date, $event_time);
+    return $product->update_product($product_id, $cat_id, $brand_id, $title, $price, $desc, $image, $keywords, $location, $event_date, $event_time, $organizer_id, $organizer_name, $ticket_quantity);
 }
 
 /**
@@ -83,5 +83,21 @@ function filter_products_by_category_ctr($cat_id) {
 function filter_products_by_brand_ctr($brand_id) {
     $product = new product_class();
     return $product->filter_products_by_brand($brand_id);
+}
+
+/**
+ * Get products by organizer (for admin filtering)
+ */
+function get_products_by_organizer_ctr($organizer_id) {
+    $product = new product_class();
+    return $product->get_products_by_organizer($organizer_id);
+}
+
+/**
+ * Decrease ticket quantity when tickets are purchased
+ */
+function decrease_ticket_quantity_ctr($product_id, $quantity) {
+    $product = new product_class();
+    return $product->decrease_ticket_quantity($product_id, $quantity);
 }
 ?>

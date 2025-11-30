@@ -16,6 +16,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 1) {
 
 //Step 2: Collect data
 $cat_name = isset($_POST['cat_name']) ? trim($_POST['cat_name']) : '';
+$organizer_id = $_SESSION['user_id'] ?? 0; // Get logged-in organizer ID
 
 if (empty($cat_name)) {
     $response['status'] = 'error';
@@ -25,7 +26,7 @@ if (empty($cat_name)) {
 }
 
 //Step 3: Call controller
-$result = add_category_ctr($cat_name);
+$result = add_category_ctr($cat_name, $organizer_id);
 
 //Step 4: Return response
 if ($result) {

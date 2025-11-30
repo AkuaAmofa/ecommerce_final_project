@@ -79,6 +79,15 @@ class order_class extends db_connection {
             $product_id = (int)$product_id;
             $qty = (int)$qty;
 
+            // Decrease ticket quantity for this product
+            require_once dirname(__DIR__) . '/controllers/product_controller.php';
+            $decrease_result = decrease_ticket_quantity_ctr($product_id, $qty);
+
+            if (!$decrease_result) {
+                error_log("Failed to decrease ticket quantity for product $product_id - not enough tickets or product not found");
+                return false; // Don't create order detail if we can't decrease tickets
+            }
+
             // If unit_price is provided, include it in the insert
             if ($unit_price !== null) {
                 $unit_price = (float)$unit_price;
@@ -347,6 +356,94 @@ class order_class extends db_connection {
             return $result ?: [];
         } catch (Exception $e) {
             error_log("Error getting recent events with tickets: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Get total tickets sold for a specific organizer
+     * @param int $organizer_id - Organizer user ID
+     * @return int - Total number of tickets sold for this organizer's events
+     */
+    public function get_total_tickets_sold_by_organizer($organizer_id) {
+        try {
+            $organizer_id = (int)$organizer_id;
+            $sql = "SELECT COALESCE(SUM(od.qty), 0) as total
+                    FROM orderdetails od
+                    JOIN products p ON od.product_id = p.product_id
+                    WHERE p.organizer_id = $organizer_id";
+            $result = $this->db_fetch_one($sql);
+            return $result ? (int)$result['total'] : 0;
+        } catch (Exception $e) {
+            error_log("Error getting total tickets sold by organizer: " . $e->getMessage());
+            return 0;
+        }
+    }
+
+    /**
+     * Get total revenue for a specific organizer
+     * @param int $organizer_id - Organizer user ID
+     * @return float - Total revenue for this organizer's events
+     */
+    public function get_total_revenue_by_organizer($organizer_id) {
+        try {
+            $organizer_id = (int)$organizer_id;
+            $sql = "SELECT COALESCE(SUM(p.amt), 0) as total
+                    FROM payment p
+                    JOIN orders o ON p.order_id = o.order_id
+                    JOIN orderdetails od ON o.order_id = od.order_id
+                    JOIN products pr ON od.product_id = pr.product_id
+                    WHERE pr.organizer_id = $organizer_id";
+            $result = $this->db_fetch_one($sql);
+            return $result ? (float)$result['total'] : 0.0;
+        } catch (Exception $e) {
+            error_log("Error getting total revenue by organizer: " . $e->getMessage());
+            return 0.0;
+        }
+    }
+
+    /**
+     * Get count of active events for a specific organizer
+     * @param int $organizer_id - Organizer user ID
+     * @return int - Number of active events
+     */
+    public function get_active_events_count_by_organizer($organizer_id) {
+        try {
+            $organizer_id = (int)$organizer_id;
+            $sql = "SELECT COUNT(*) as total FROM products WHERE organizer_id = $organizer_id";
+            $result = $this->db_fetch_one($sql);
+            return $result ? (int)$result['total'] : 0;
+        } catch (Exception $e) {
+            error_log("Error getting active events count by organizer: " . $e->getMessage());
+            return 0;
+        }
+    }
+
+    /**
+     * Get recent events with ticket sales for a specific organizer
+     * @param int $organizer_id - Organizer user ID
+     * @param int $limit - Number of events to return
+     * @return array - Array of events with ticket counts
+     */
+    public function get_recent_events_with_tickets_by_organizer($organizer_id, $limit = 3) {
+        try {
+            $organizer_id = (int)$organizer_id;
+            $limit = (int)$limit;
+            $sql = "SELECT
+                        p.product_id,
+                        p.product_title,
+                        COALESCE(SUM(od.qty), 0) as tickets_sold
+                    FROM products p
+                    LEFT JOIN orderdetails od ON p.product_id = od.product_id
+                    WHERE p.organizer_id = $organizer_id
+                    GROUP BY p.product_id, p.product_title
+                    ORDER BY p.product_id DESC
+                    LIMIT $limit";
+
+            $result = $this->db_fetch_all($sql);
+            return $result ?: [];
+        } catch (Exception $e) {
+            error_log("Error getting recent events with tickets by organizer: " . $e->getMessage());
             return [];
         }
     }

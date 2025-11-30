@@ -38,6 +38,7 @@ if ($user) {
     $_SESSION['name']    = $user['customer_name'];
     $_SESSION['role']    = $user['user_role'];
     $_SESSION['email']   = $user['customer_email'];
+    $_SESSION['super_admin'] = $user['super_admin'] ?? 0; // Set super_admin flag
 
     $response['status']  = 'success';
     $response['message'] = 'Login successful';

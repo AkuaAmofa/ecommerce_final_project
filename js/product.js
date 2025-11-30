@@ -56,19 +56,25 @@ $(document).ready(function () {
     const brand_id = $("#product_brand").val();
     const title = $("#product_title").val().trim();
     const price = $("#product_price").val().trim();
+    const ticket_quantity = $("#ticket_quantity").val().trim();
     const desc = $("#product_desc").val().trim();
     const keywords = $("#product_keywords").val().trim();
     const location = $("#product_location").val().trim();
     const event_date = $("#event_date").val();
     const event_time = $("#event_time").val();
+    const organizer_name = $("#organizer_name").val().trim();
 
     // --- Basic Validation ---
-    if (!title || !price || !cat_id || !brand_id) {
-      Swal.fire("Error", "Please fill all required fields!", "error");
+    if (!title || !price || !cat_id || !brand_id || !organizer_name || !ticket_quantity) {
+      Swal.fire("Error", "Please fill all required fields including number of tickets!", "error");
       return;
     }
     if (isNaN(price) || parseFloat(price) <= 0) {
       Swal.fire("Error", "Please enter a valid numeric price.", "error");
+      return;
+    }
+    if (isNaN(ticket_quantity) || parseInt(ticket_quantity) < 0) {
+      Swal.fire("Error", "Please enter a valid number of tickets.", "error");
       return;
     }
 
@@ -78,12 +84,14 @@ $(document).ready(function () {
     formData.append("product_brand", brand_id);
     formData.append("product_title", title);
     formData.append("product_price", price);
+    formData.append("ticket_quantity", ticket_quantity);
     formData.append("product_desc", desc);
     formData.append("product_keywords", keywords);
     formData.append("product_image", uploadedImagePath);
     formData.append("product_location", location);
     formData.append("event_date", event_date);
     formData.append("event_time", event_time);
+    formData.append("organizer_name", organizer_name);
 
     const actionUrl = isEditMode
       ? "../actions/update_product_action.php"
@@ -129,6 +137,7 @@ $(document).ready(function () {
     $("#product_id").val(btn.data("id"));
     $("#product_title").val(btn.data("title"));
     $("#product_price").val(btn.data("price"));
+    $("#ticket_quantity").val(btn.data("qty"));
     $("#product_desc").val(btn.data("desc"));
     $("#product_keywords").val(btn.data("keywords"));
     $("#product_cat").val(btn.data("cat"));
@@ -136,6 +145,7 @@ $(document).ready(function () {
     $("#product_location").val(btn.data("location"));
     $("#event_date").val(btn.data("date"));
     $("#event_time").val(btn.data("time"));
+    $("#organizer_name").val(btn.data("organizer"));
 
     $("#submitBtn").text("Update Product")
                    .removeClass("btn-primary")

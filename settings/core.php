@@ -30,6 +30,11 @@ function isAdmin(): bool {
     return isLoggedIn() && isset($_SESSION['role']) && (int)$_SESSION['role'] === 1;
 }
 
+/** Is the logged-in user a super admin? */
+function isSuperAdmin(): bool {
+    return isLoggedIn() && isset($_SESSION['super_admin']) && (int)$_SESSION['super_admin'] === 1;
+}
+
 /** Get logged-in user id or null */
 function getUserId(): ?int {
     return isLoggedIn() ? (int)$_SESSION['user_id'] : null;

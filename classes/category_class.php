@@ -8,25 +8,27 @@ class Category extends db_connection
     /**
      * Add new category
      * @param string $name
+     * @param int $organizer_id
      * @return bool
      */
-    public function addCategory($name)
+    public function addCategory($name, $organizer_id = null)
     {
         if ($this->db === null) {
             $this->db_connect();
         }
 
         $name = mysqli_real_escape_string($this->db, $name);
+        $organizer_id = (int)$organizer_id;
 
-        // Ensure category name is unique
-        $checkSql = "SELECT * FROM categories WHERE cat_name = '$name' LIMIT 1";
+        // Ensure category name is unique FOR THIS ORGANIZER
+        $checkSql = "SELECT * FROM categories WHERE cat_name = '$name' AND organizer_id = $organizer_id LIMIT 1";
         $exists = $this->db_fetch_one($checkSql);
 
         if ($exists) {
-            return false; // Category already exists
+            return false; // Category already exists for this organizer
         }
 
-        $sql = "INSERT INTO categories (cat_name) VALUES ('$name')";
+        $sql = "INSERT INTO categories (cat_name, organizer_id) VALUES ('$name', $organizer_id)";
         return $this->db_write_query($sql);
     }
 
@@ -92,6 +94,22 @@ class Category extends db_connection
         }
 
         $sql = "SELECT * FROM categories ORDER BY cat_id DESC";
+        return $this->db_fetch_all($sql);
+    }
+
+    /**
+     * Get categories by organizer
+     * @param int $organizer_id
+     * @return array|false
+     */
+    public function getCategoriesByOrganizer($organizer_id)
+    {
+        if ($this->db === null) {
+            $this->db_connect();
+        }
+
+        $organizer_id = (int)$organizer_id;
+        $sql = "SELECT * FROM categories WHERE organizer_id = $organizer_id ORDER BY cat_id DESC";
         return $this->db_fetch_all($sql);
     }
 }

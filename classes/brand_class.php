@@ -9,17 +9,18 @@ class Brand extends db_connection
     }
 
     // CREATE
-    public function addBrand($name, $cat_id) {
+    public function addBrand($name, $cat_id, $organizer_id = null) {
         $name = mysqli_real_escape_string($this->db, trim($name));
         $cat  = (int)$cat_id;
+        $organizer_id = (int)$organizer_id;
 
-        // enforce uniqueness at code-level too (index also enforces)
+        // enforce uniqueness at code-level too (for this organizer)
         $check = $this->db_fetch_one(
-            "SELECT brand_id FROM brands WHERE brand_cat = $cat AND brand_name = '$name' LIMIT 1"
+            "SELECT brand_id FROM brands WHERE brand_cat = $cat AND brand_name = '$name' AND organizer_id = $organizer_id LIMIT 1"
         );
         if ($check) return ['ok'=>false,'msg'=>'Brand already exists in this category'];
 
-        $sql = "INSERT INTO brands (brand_cat, brand_name) VALUES ($cat, '$name')";
+        $sql = "INSERT INTO brands (brand_cat, brand_name, organizer_id) VALUES ($cat, '$name', $organizer_id)";
         return $this->db_write_query($sql)
             ? ['ok'=>true,'id'=>$this->last_insert_id()]
             : ['ok'=>false,'msg'=>'DB insert failed'];
@@ -30,6 +31,17 @@ class Brand extends db_connection
         $sql = "SELECT b.brand_id, b.brand_name, b.brand_cat, c.cat_name
                 FROM brands b
                 LEFT JOIN categories c ON c.cat_id = b.brand_cat
+                ORDER BY c.cat_name IS NULL, c.cat_name, b.brand_name";
+        return $this->db_fetch_all($sql) ?: [];
+    }
+
+    // RETRIEVE brands by organizer
+    public function getBrandsByOrganizer($organizer_id) {
+        $organizer_id = (int)$organizer_id;
+        $sql = "SELECT b.brand_id, b.brand_name, b.brand_cat, c.cat_name
+                FROM brands b
+                LEFT JOIN categories c ON c.cat_id = b.brand_cat
+                WHERE b.organizer_id = $organizer_id
                 ORDER BY c.cat_name IS NULL, c.cat_name, b.brand_name";
         return $this->db_fetch_all($sql) ?: [];
     }

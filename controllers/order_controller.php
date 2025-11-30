@@ -124,3 +124,44 @@ function get_recent_events_with_tickets_ctr($limit = 3) {
     $ord = new order_class();
     return $ord->get_recent_events_with_tickets($limit);
 }
+
+/**
+ * Get total tickets sold for a specific organizer
+ * @param int $organizer_id - Organizer user ID
+ * @return int - Total number of tickets sold for this organizer's events
+ */
+function get_total_tickets_sold_by_organizer_ctr($organizer_id) {
+    $ord = new order_class();
+    return $ord->get_total_tickets_sold_by_organizer($organizer_id);
+}
+
+/**
+ * Get total revenue for a specific organizer
+ * @param int $organizer_id - Organizer user ID
+ * @return float - Total revenue for this organizer's events
+ */
+function get_total_revenue_by_organizer_ctr($organizer_id) {
+    $ord = new order_class();
+    return $ord->get_total_revenue_by_organizer($organizer_id);
+}
+
+/**
+ * Get count of active events for a specific organizer
+ * @param int $organizer_id - Organizer user ID
+ * @return int - Number of active events
+ */
+function get_active_events_count_by_organizer_ctr($organizer_id) {
+    $ord = new order_class();
+    return $ord->get_active_events_count_by_organizer($organizer_id);
+}
+
+/**
+ * Get recent events with ticket sales for a specific organizer
+ * @param int $organizer_id - Organizer user ID
+ * @param int $limit - Number of events to return
+ * @return array - Array of events with ticket counts
+ */
+function get_recent_events_with_tickets_by_organizer_ctr($organizer_id, $limit = 3) {
+    $ord = new order_class();
+    return $ord->get_recent_events_with_tickets_by_organizer($organizer_id, $limit);
+}

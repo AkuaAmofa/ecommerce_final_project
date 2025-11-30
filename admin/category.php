@@ -140,6 +140,12 @@ if (!isLoggedIn() || !isAdmin()) {
         <a href="analytics.php" class="sidebar-item">
           <span>📈</span> Analytics
         </a>
+        <a href="payment_requests.php" class="sidebar-item">
+          <span>💰</span> Payment Requests
+        </a>
+        <a href="payment_approvals.php" class="sidebar-item">
+          <span>✅</span> Payment Approvals
+        </a>
       </div>
     </div>
 

@@ -11,10 +11,13 @@ if (!isLoggedIn() || !isAdmin()) {
 require_once '../controllers/product_controller.php';
 require_once '../controllers/order_controller.php';
 
-// Get statistics
-$total_tickets = get_total_tickets_sold_ctr();
-$total_revenue = get_total_revenue_ctr();
-$active_events = get_active_events_count_ctr();
+// Get logged-in organizer ID
+$organizer_id = $_SESSION['user_id'] ?? 0;
+
+// Get statistics filtered by organizer
+$total_tickets = get_total_tickets_sold_by_organizer_ctr($organizer_id);
+$total_revenue = get_total_revenue_by_organizer_ctr($organizer_id);
+$active_events = get_active_events_count_by_organizer_ctr($organizer_id);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -136,6 +139,12 @@ $active_events = get_active_events_count_ctr();
         </a>
         <a href="analytics.php" class="sidebar-item active">
           <span>📈</span> Analytics
+        </a>
+        <a href="payment_requests.php" class="sidebar-item">
+          <span>💰</span> Payment Requests
+        </a>
+        <a href="payment_approvals.php" class="sidebar-item">
+          <span>✅</span> Payment Approvals
         </a>
       </div>
     </div>

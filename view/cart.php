@@ -113,9 +113,9 @@
       <div class="col-md-3 mb-3">
         <h6 class="fw-semibold mb-3">For Organizers</h6>
         <ul class="list-unstyled">
-          <li>Create Event</li>
-          <li>Dashboard</li>
-          <li>Pricing</li>
+          <li><a href="../admin/product.php">Create Event</a></li>
+          <li><a href="../admin/dashboard.php">Dashboard</a></li>
+          <li><a href="../login/login.php">Login</a></li>
         </ul>
       </div>
 
