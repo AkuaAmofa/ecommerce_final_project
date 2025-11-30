@@ -7,3 +7,4 @@ if ($cart_id <= 0) { echo json_encode(['status'=>'error','message'=>'Invalid car
 
 $ok = cart_remove_ctr($cart_id);
 echo json_encode($ok ? ['status'=>'success'] : ['status'=>'error','message'=>'Remove failed']);
+?>

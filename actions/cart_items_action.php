@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 
-// Always return clean JSON (avoid stray output)
 if (ob_get_level()) { ob_end_clean(); }
 header('Content-Type: application/json; charset=utf-8');
 
@@ -9,7 +8,7 @@ try {
     require_once __DIR__ . '/../settings/core.php';
     require_once __DIR__ . '/../controllers/cart_controller.php';
 
-    // Fallback helpers in case core.php doesn't define them
+    // Fallback helpers 
     if (!function_exists('current_user_id')) {
         function current_user_id() {
             return (isset($_SESSION['user_id']) && is_numeric($_SESSION['user_id']))
@@ -25,9 +24,6 @@ try {
     $c_id = current_user_id();
     $ip   = $c_id ? null : get_client_ip();
 
-    // If your controller has a unified function that accepts both:
-    //   cart_items_ctr($c_id, $ip)
-    // keep this as-is. If instead you have two functions, see the alternate block below.
     $items = cart_items_ctr($c_id, $ip);
     if (!is_array($items)) { $items = []; }
 
@@ -56,3 +52,4 @@ try {
     echo json_encode(['status' => 'error', 'message' => 'Server exception']);
 }
 exit;
+?>

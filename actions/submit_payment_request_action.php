@@ -7,11 +7,11 @@ require_once '../controllers/payment_request_controller.php';
 require_once '../controllers/order_controller.php';
 require_once '../settings/core.php';
 
-// Check if user is logged in and is an admin (organizer)
-if (!isLoggedIn() || !isAdmin()) {
+// Check if user is logged in and is a super admin
+if (!isLoggedIn() || !isSuperAdmin()) {
     echo json_encode([
         'status' => 'error',
-        'message' => 'Access denied. You must be logged in as an organizer.'
+        'message' => 'Access denied. Super admin access required.'
     ]);
     exit();
 }

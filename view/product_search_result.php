@@ -10,48 +10,122 @@ $brands = get_all_brands_ctr();
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Search Results</title>
+  <title>Search Results - EventLink</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
   <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+  <style>
+    body {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      min-height: 100vh;
+    }
+    .search-header {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 20px rgba(43, 58, 103, 0.08);
+      margin-bottom: 24px;
+    }
+    .form-control:focus, .form-select:focus {
+      border-color: var(--el-gold);
+      box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--el-gold), #f4d03f);
+      border: none;
+      color: white;
+      font-weight: 600;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #f4d03f, var(--el-gold));
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    }
+    .card {
+      border: none;
+      border-radius: 12px;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 4px 20px rgba(43, 58, 103, 0.08);
+    }
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 30px rgba(43, 58, 103, 0.15);
+    }
+    .card-title {
+      color: var(--el-navy);
+      font-weight: 600;
+    }
+    .btn-outline-success {
+      border-color: var(--el-gold);
+      color: var(--el-gold);
+    }
+    .btn-outline-success:hover {
+      background: var(--el-gold);
+      border-color: var(--el-gold);
+      color: white;
+    }
+    h5 {
+      color: var(--el-navy);
+      font-weight: 700;
+    }
+    .pagination-controls {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 4px 20px rgba(43, 58, 103, 0.08);
+    }
+    .btn-outline-secondary {
+      border-color: var(--el-navy);
+      color: var(--el-navy);
+    }
+    .btn-outline-secondary:hover {
+      background: var(--el-navy);
+      border-color: var(--el-navy);
+      color: white;
+    }
+  </style>
 </head>
-<body class="bg-light">
+<body>
 
 <div class="container py-5">
-  <!-- Updated: Back button now correctly points to view/all_product.php -->
-  <a href="all_product.php" class="btn btn-secondary mb-4">← Back to Products</a>
+  <a href="all_product.php" class="btn btn-outline-secondary mb-4">← Back to Events</a>
 
-  <div class="row g-2 mb-3">
-    <div class="col-md-4">
-      <input type="text" id="searchBox" class="form-control" placeholder="Search products...">
-    </div>
-    <div class="col-md-3">
-      <select id="filterCategory" class="form-select">
-        <option value="">Category</option>
-        <?php foreach ($categories as $cat): ?>
-          <option value="<?= $cat['cat_id'] ?>"><?= htmlspecialchars($cat['cat_name']) ?></option>
-        <?php endforeach; ?>
-      </select>
-    </div>
-    <div class="col-md-3">
-      <select id="filterBrand" class="form-select">
-        <option value="">Brand</option>
-        <?php foreach ($brands as $brand): ?>
-          <option value="<?= $brand['brand_id'] ?>"><?= htmlspecialchars($brand['brand_name']) ?></option>
-        <?php endforeach; ?>
-      </select>
-    </div>
-    <div class="col-md-2 d-grid">
-      <button id="applyFilters" class="btn btn-primary">Search</button>
+  <div class="search-header">
+    <h4 class="mb-4" style="color: var(--el-navy); font-weight: 700;">Search Events</h4>
+    <div class="row g-3">
+      <div class="col-md-4">
+        <input type="text" id="searchBox" class="form-control" placeholder="Search events...">
+      </div>
+      <div class="col-md-3">
+        <select id="filterCategory" class="form-select">
+          <option value="">All Categories</option>
+          <?php foreach ($categories as $cat): ?>
+            <option value="<?= $cat['cat_id'] ?>"><?= htmlspecialchars($cat['cat_name']) ?></option>
+          <?php endforeach; ?>
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select id="filterBrand" class="form-select">
+          <option value="">All Organizers</option>
+          <?php foreach ($brands as $brand): ?>
+            <option value="<?= $brand['brand_id'] ?>"><?= htmlspecialchars($brand['brand_name']) ?></option>
+          <?php endforeach; ?>
+        </select>
+      </div>
+      <div class="col-md-2 d-grid">
+        <button id="applyFilters" class="btn btn-primary">Search</button>
+      </div>
     </div>
   </div>
 
-  <h5 id="searchTitle" class="mb-3"></h5>
+  <h5 id="searchTitle" class="mb-4"></h5>
   <div id="searchResults" class="row g-4"></div>
 
-  <div class="d-flex justify-content-between align-items-center mt-4">
-    <button id="prevPage" class="btn btn-outline-secondary">Prev</button>
-    <div id="pageInfo" class="small text-muted"></div>
-    <button id="nextPage" class="btn btn-outline-secondary">Next</button>
+  <div class="pagination-controls d-flex justify-content-between align-items-center mt-4">
+    <button id="prevPage" class="btn btn-outline-secondary">← Previous</button>
+    <div id="pageInfo" class="text-muted fw-semibold"></div>
+    <button id="nextPage" class="btn btn-outline-secondary">Next →</button>
   </div>
 </div>
 
@@ -84,11 +158,11 @@ $(function(){
 
   function load(){
     const q = $('#searchBox').val().trim();
-    $('#searchTitle').text(q ? 'Search results for "' + q + '"' : 'All Products');
+    $('#searchTitle').text(q ? 'Search results for "' + q + '"' : 'All Events');
 
     $.getJSON(buildUrl(), function(payload){
       if (!payload || payload.status === 'error') {
-        $('#searchResults').html('<p class="text-center text-muted mt-5">' + (payload?.message || 'No products') + '</p>');
+        $('#searchResults').html('<p class="text-center text-muted mt-5">' + (payload?.message || 'No events found') + '</p>');
         $('#pageInfo').text('');
         return;
       }
@@ -102,7 +176,7 @@ $(function(){
 
   function render(items){
     if (!items.length) {
-      $('#searchResults').html('<p class="text-center text-muted mt-5">No products found.</p>');
+      $('#searchResults').html('<p class="text-center text-muted mt-5">No events found.</p>');
       return;
     }
 
@@ -111,14 +185,13 @@ $(function(){
       html += `
       <div class="col-md-3">
         <div class="card h-100 shadow-sm">
-          <img src="../uploads/${p.product_image || ''}" class="card-img-top" style="height:200px;object-fit:cover;" alt="Product">
+          <img src="../uploads/${p.product_image || ''}" class="card-img-top" style="height:200px;object-fit:cover;" alt="Event">
           <div class="card-body d-flex flex-column">
             <h6 class="card-title mb-1">${p.product_title}</h6>
             <p class="text-muted small mb-2">${p.brand_name} • ${p.cat_name}</p>
             <p class="fw-bold mb-3">GHS ${parseFloat(p.product_price).toFixed(2)}</p>
             <div class="mt-auto">
-              <a href="single_product.php?id=${p.product_id}" class="btn btn-sm btn-primary w-100 mb-2">View Details</a>
-              <button class="btn btn-sm btn-outline-success w-100" data-id="${p.product_id}">Add to Cart</button>
+              <a href="single_product.php?id=${p.product_id}" class="btn btn-sm btn-primary w-100">View Details</a>
             </div>
           </div>
         </div>

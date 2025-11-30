@@ -126,26 +126,28 @@ if (!isLoggedIn() || !isAdmin()) {
           <h6 style="color: var(--el-gold); font-weight: 600; margin-bottom: 20px;">Organizer Panel</h6>
         </div>
         <a href="dashboard.php" class="sidebar-item">
-          <span>📊</span> Overview
+          <span></span> Overview
         </a>
         <a href="category.php" class="sidebar-item active">
-          <span>🗂️</span> Manage Categories
+          <span></span> Manage Categories
         </a>
         <a href="brand.php" class="sidebar-item">
-          <span>🏷️</span> Manage Brands
+          <span></span> Manage Brands
         </a>
         <a href="product.php" class="sidebar-item">
-          <span>📅</span> Manage Events
+          <span></span> Manage Events
         </a>
         <a href="analytics.php" class="sidebar-item">
-          <span>📈</span> Analytics
+          <span></span> Analytics
         </a>
+        <?php if (function_exists('isSuperAdmin') && isSuperAdmin()): ?>
         <a href="payment_requests.php" class="sidebar-item">
-          <span>💰</span> Payment Requests
+          <span></span> Payment Requests
         </a>
         <a href="payment_approvals.php" class="sidebar-item">
-          <span>✅</span> Payment Approvals
+          <span></span> Payment Approvals
         </a>
+        <?php endif; ?>
       </div>
     </div>
 

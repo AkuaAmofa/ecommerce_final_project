@@ -28,7 +28,7 @@ try {
     $invoice_no = 'INV-' . strtoupper(bin2hex(random_bytes(4)));
 
     // Create order with customer_id column
-    $order_id = create_order_ctr($customer_id, $invoice_no, 'Paid'); // or 'Pending'
+    $order_id = create_order_ctr($customer_id, $invoice_no, 'Paid'); 
     if (!$order_id) throw new Exception('Order creation failed');
 
     // Insert orderdetails

@@ -6,11 +6,11 @@ session_start();
 require_once '../controllers/payment_request_controller.php';
 require_once '../settings/core.php';
 
-// Check if user is logged in and is an admin
-if (!isLoggedIn() || !isAdmin()) {
+// Check if user is logged in and is a super admin
+if (!isLoggedIn() || !isSuperAdmin()) {
     echo json_encode([
         'status' => 'error',
-        'message' => 'Access denied.'
+        'message' => 'Access denied. Super admin only.'
     ]);
     exit();
 }

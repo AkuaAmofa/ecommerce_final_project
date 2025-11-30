@@ -9,3 +9,4 @@ if ($cart_id <= 0) { echo json_encode(['status'=>'error','message'=>'Invalid car
 
 $ok = cart_update_qty_ctr($cart_id, max(1,$qty));
 echo json_encode($ok ? ['status'=>'success'] : ['status'=>'error','message'=>'Update failed']);
+?>

@@ -46,3 +46,4 @@ try {
     echo json_encode(['status' => 'error', 'message' => 'Server exception']);
 }
 exit;
+?>

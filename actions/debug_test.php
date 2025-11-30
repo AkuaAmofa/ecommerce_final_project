@@ -1,6 +1,4 @@
 <?php
-// Create this file as debug_test.php in your actions folder
-// This will help us identify the exact issue
 
 header('Content-Type: application/json');
 ini_set('display_errors', 1);

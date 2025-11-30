@@ -70,7 +70,7 @@ switch ($action) {
         break;
     }
 
-    // Extra credit: composite search + numeric price filters
+    
     case 'search_advanced': {
         $q         = trim($_GET['q'] ?? '');
         $cat_id    = (int)($_GET['cat'] ?? 0);
@@ -78,8 +78,7 @@ switch ($action) {
         $min_price = isset($_GET['min_price']) ? (float)$_GET['min_price'] : null;
         $max_price = isset($_GET['max_price']) ? (float)$_GET['max_price'] : null;
 
-        // Start from all, then filter in memory (simple and safe).
-        // For large catalogs, move this WHERE-building logic into product_class with prepared SQL.
+        
         $data = view_all_products_ctr() ?: [];
 
         $data = array_filter($data, function($p) use ($q, $cat_id, $brand_id, $min_price, $max_price) {

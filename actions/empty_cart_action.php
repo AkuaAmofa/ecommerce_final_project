@@ -13,3 +13,4 @@ echo json_encode(
     $ok ? ['status' => 'success']
         : ['status' => 'error', 'message' => 'Could not empty cart']
 );
+?>

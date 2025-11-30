@@ -178,26 +178,28 @@ $recent_events = get_recent_events_with_tickets_by_organizer_ctr($organizer_id, 
           <h6 style="color: var(--el-gold); font-weight: 600; margin-bottom: 20px;">Organizer Panel</h6>
         </div>
         <a href="dashboard.php" class="sidebar-item active">
-          <span>📊</span> Overview
+          <span></span> Overview
         </a>
         <a href="category.php" class="sidebar-item">
-          <span>🗂️</span> Manage Categories
+          <span></span> Manage Categories
         </a>
         <a href="brand.php" class="sidebar-item">
-          <span>🏷️</span> Manage Brands
+          <span></span> Manage Brands
         </a>
         <a href="product.php" class="sidebar-item">
-          <span>📅</span> Manage Events
+          <span></span> Manage Events
         </a>
         <a href="analytics.php" class="sidebar-item">
-          <span>📈</span> Analytics
+          <span></span> Analytics
         </a>
+        <?php if (function_exists('isSuperAdmin') && isSuperAdmin()): ?>
         <a href="payment_requests.php" class="sidebar-item">
-          <span>💰</span> Payment Requests
+          <span></span> Payment Requests
         </a>
         <a href="payment_approvals.php" class="sidebar-item">
-          <span>✅</span> Payment Approvals
+          <span></span> Payment Approvals
         </a>
+        <?php endif; ?>
       </div>
     </div>
 
@@ -239,7 +241,7 @@ $recent_events = get_recent_events_with_tickets_by_organizer_ctr($organizer_id, 
           <h5 style="color: var(--el-navy); font-weight: 600; margin-bottom: 20px;">Quick Actions</h5>
           <div class="d-flex gap-3 flex-wrap">
             <a href="product.php" class="btn btn-gold quick-action-btn">
-              ➕ Create New Event
+               Create New Event
             </a>
             <a href="analytics.php" class="btn btn-outline-secondary quick-action-btn">
               View Reports

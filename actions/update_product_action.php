@@ -33,7 +33,7 @@ if ($product_id <= 0 || empty($title) || $price <= 0) {
     exit();
 }
 
-// Handle direct image upload (optional)
+// Handle direct image upload 
 if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] === UPLOAD_ERR_OK) {
     // Determine if we're on the server or local
     $is_server = strpos(__DIR__, '/home/akua.amofa') !== false;

@@ -1,9 +1,9 @@
 <?php
 require_once '../settings/core.php';
 
-// Restrict to admins only
-if (!isLoggedIn() || !isAdmin()) {
-    header("Location: ../login/login.php");
+// Restrict to super admin only
+if (!isLoggedIn() || !isSuperAdmin()) {
+    header("Location: ../login/login.php?error=access_denied");
     exit();
 }
 
@@ -130,28 +130,15 @@ $has_pending = has_pending_payment_request_ctr($organizer_id);
     <div class="col-md-3 col-lg-2 mb-4">
       <div class="sidebar">
         <div class="p-3">
-          <h6 style="color: var(--el-gold); font-weight: 600; margin-bottom: 20px;">Organizer Panel</h6>
+          <h6 style="color: var(--el-gold); font-weight: 600; margin-bottom: 20px;">
+            <?php echo (function_exists('isSuperAdmin') && isSuperAdmin()) ? 'Super Admin Panel' : 'Organizer Panel'; ?>
+          </h6>
         </div>
-        <a href="dashboard.php" class="sidebar-item">
-          <span>📊</span> Overview
-        </a>
-        <a href="category.php" class="sidebar-item">
-          <span>🗂️</span> Manage Categories
-        </a>
-        <a href="brand.php" class="sidebar-item">
-          <span>🏷️</span> Manage Brands
-        </a>
-        <a href="product.php" class="sidebar-item">
-          <span>📅</span> Manage Events
-        </a>
-        <a href="analytics.php" class="sidebar-item">
-          <span>📈</span> Analytics
-        </a>
         <a href="payment_requests.php" class="sidebar-item active">
-          <span>💰</span> Payment Requests
+          <span></span> Payment Requests
         </a>
         <a href="payment_approvals.php" class="sidebar-item">
-          <span>✅</span> Payment Approvals
+          <span></span> Payment Approvals
         </a>
       </div>
     </div>

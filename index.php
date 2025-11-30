@@ -51,9 +51,6 @@ $brands     = get_all_brands_ctr();
         <li class="nav-item">
           <a class="nav-link el-nav-link" href="view/all_product.php">Events</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link el-nav-link" href="view/about.php">About</a>
-        </li>
       </ul>
 
       <!-- Right menu -->
@@ -216,7 +213,6 @@ $brands     = get_all_brands_ctr();
         <ul class="list-unstyled">
           <li><a href="index.php">Home</a></li>
           <li><a href="view/all_product.php">Browse Events</a></li>
-          <li><a href="view/about.php">About Us</a></li>
         </ul>
       </div>
 

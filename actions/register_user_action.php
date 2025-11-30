@@ -30,7 +30,7 @@ $country  = isset($_POST['country']) ? trim($_POST['country']) : '';
 $city     = isset($_POST['city']) ? trim($_POST['city']) : '';
 $contact  = isset($_POST['contact']) ? trim($_POST['contact']) : '';
 $role     = isset($_POST['role']) ? (int)$_POST['role'] : 2;   // default 2 = Customer
-$image    = null; // optional
+$image    = null; 
 
 // Debug: Log processed data
 error_log("Processed data - Name: $name, Email: $email, Country: $country, City: $city, Contact: $contact, Role: $role");

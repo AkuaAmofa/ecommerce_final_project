@@ -34,7 +34,7 @@ if (!$reference) {
     exit();
 }
 
-// Optional: Verify reference matches session
+// Verify reference matches session
 if (isset($_SESSION['paystack_ref']) && $_SESSION['paystack_ref'] !== $reference) {
     error_log("Reference mismatch - Expected: {$_SESSION['paystack_ref']}, Got: $reference");
     // Allow to proceed anyway, but log it
@@ -90,7 +90,7 @@ try {
         exit();
     }
     
-    // Ensure we have expected total server-side (calculate from cart if frontend didn't send it)
+    
     require_once '../controllers/cart_controller.php';
     if (!$cart_items || count($cart_items) == 0) {
         $cart_items = cart_items_ctr(get_user_id(), get_client_ip());
@@ -127,7 +127,7 @@ try {
         exit();
     }
     
-    // Payment is verified! Now create the order in our system
+    // Payment is verified!
     require_once '../controllers/cart_controller.php';
     require_once '../controllers/order_controller.php';
     require_once '../settings/db_class.php';
