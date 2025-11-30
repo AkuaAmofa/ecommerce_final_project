@@ -9,6 +9,10 @@ if (!isAdmin()) {
     header("Location: ../index.php");
     exit();
 }
+
+// Get user role
+$user_role = $_SESSION['user_role'] ?? null;
+$is_super = function_exists('isSuperAdmin') && isSuperAdmin();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -125,8 +129,11 @@ if (!isAdmin()) {
     <div class="col-md-3 col-lg-2 mb-4">
       <div class="sidebar">
         <div class="p-3">
-          <h6 style="color: var(--el-gold); font-weight: 600; margin-bottom: 20px;">Organizer Panel</h6>
+          <h6 style="color: var(--el-gold); font-weight: 600; margin-bottom: 20px;">
+            <?php echo $is_super ? 'Super Admin Panel' : 'Organizer Panel'; ?>
+          </h6>
         </div>
+
         <a href="dashboard.php" class="sidebar-item">
           <span></span> Overview
         </a>
@@ -142,14 +149,21 @@ if (!isAdmin()) {
         <a href="analytics.php" class="sidebar-item">
           <span></span> Analytics
         </a>
-        <?php if (function_exists('isSuperAdmin') && isSuperAdmin()): ?>
-        <a href="payment_requests.php" class="sidebar-item">
-          <span></span> Payment Requests
-        </a>
-        <a href="payment_approvals.php" class="sidebar-item">
-          <span></span> Payment Approvals
-        </a>
+
+        <!-- ORGANIZER ONLY -->
+        <?php if ($user_role == 1): ?>
+          <a href="payment_requests.php" class="sidebar-item">
+            <span></span> Payment Requests
+          </a>
         <?php endif; ?>
+
+        <!-- SUPER ADMIN ONLY -->
+        <?php if ($is_super): ?>
+          <a href="payment_approvals.php" class="sidebar-item">
+            <span></span> Payment Approvals
+          </a>
+        <?php endif; ?>
+
       </div>
     </div>
 
@@ -161,23 +175,23 @@ if (!isAdmin()) {
       <div class="card mb-4">
         <div class="card-body">
           <h5 class="card-title mb-3">Add a New Brand</h5>
-      <form id="addBrandForm" class="row g-3">
-        <div class="col-md-6">
-          <label for="brand_name" class="form-label">Brand Name</label>
-          <input type="text" id="brand_name" name="brand_name" class="form-control" required>
+          <form id="addBrandForm" class="row g-3">
+            <div class="col-md-6">
+              <label for="brand_name" class="form-label">Brand Name</label>
+              <input type="text" id="brand_name" name="brand_name" class="form-control" required>
+            </div>
+            <div class="col-md-6">
+              <label for="brand_cat" class="form-label">Category</label>
+              <select id="brand_cat" name="brand_cat" class="form-select" required>
+                <!-- populated by JS -->
+              </select>
+            </div>
+            <div class="col-12">
+              <button type="submit" class="btn btn-primary w-100">Add Brand</button>
+            </div>
+          </form>
         </div>
-        <div class="col-md-6">
-          <label for="brand_cat" class="form-label">Category</label>
-          <select id="brand_cat" name="brand_cat" class="form-select" required>
-            <!-- populated by JS -->
-          </select>
-        </div>
-        <div class="col-12">
-          <button type="submit" class="btn btn-primary w-100">Add Brand</button>
-        </div>
-      </form>
-    </div>
-  </div>
+      </div>
 
       <!-- Brands Table -->
       <div class="card">

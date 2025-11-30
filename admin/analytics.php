@@ -18,6 +18,10 @@ $organizer_id = $_SESSION['user_id'] ?? 0;
 $total_tickets = get_total_tickets_sold_by_organizer_ctr($organizer_id);
 $total_revenue = get_total_revenue_by_organizer_ctr($organizer_id);
 $active_events = get_active_events_count_by_organizer_ctr($organizer_id);
+
+// Get user role
+$user_role = $_SESSION['user_role'] ?? null;
+$is_super = function_exists('isSuperAdmin') && isSuperAdmin();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -123,8 +127,11 @@ $active_events = get_active_events_count_by_organizer_ctr($organizer_id);
     <div class="col-md-3 col-lg-2 mb-4">
       <div class="sidebar">
         <div class="p-3">
-          <h6 style="color: var(--el-gold); font-weight: 600; margin-bottom: 20px;">Organizer Panel</h6>
+          <h6 style="color: var(--el-gold); font-weight: 600; margin-bottom: 20px;">
+            <?php echo $is_super ? 'Super Admin Panel' : 'Organizer Panel'; ?>
+          </h6>
         </div>
+
         <a href="dashboard.php" class="sidebar-item">
           <span></span> Overview
         </a>
@@ -140,14 +147,21 @@ $active_events = get_active_events_count_by_organizer_ctr($organizer_id);
         <a href="analytics.php" class="sidebar-item active">
           <span></span> Analytics
         </a>
-        <?php if (function_exists('isSuperAdmin') && isSuperAdmin()): ?>
-        <a href="payment_requests.php" class="sidebar-item">
-          <span></span> Payment Requests
-        </a>
-        <a href="payment_approvals.php" class="sidebar-item">
-          <span></span> Payment Approvals
-        </a>
+
+        <!-- ORGANIZER ONLY -->
+        <?php if ($user_role == 1): ?>
+          <a href="payment_requests.php" class="sidebar-item">
+            <span></span> Payment Requests
+          </a>
         <?php endif; ?>
+
+        <!-- SUPER ADMIN ONLY -->
+        <?php if ($is_super): ?>
+          <a href="payment_approvals.php" class="sidebar-item">
+            <span></span> Payment Approvals
+          </a>
+        <?php endif; ?>
+
       </div>
     </div>
 
@@ -207,10 +221,9 @@ $active_events = get_active_events_count_by_organizer_ctr($organizer_id);
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-// Chart colors matching EventLink branding
-const primaryColor = '#2B3A67'; // Navy
-const goldColor = '#D4AF37'; // Gold
-const chartColors = ['#2B3A67', '#D4AF37', '#0369a1', '#d97706', '#7c3aed', '#10b981'];
+// Chart colors
+const primaryColor = '#2B3A67';
+const goldColor = '#D4AF37';
 
 // Revenue Chart
 const revenueCtx = document.getElementById('revenueChart').getContext('2d');
@@ -227,9 +240,7 @@ new Chart(revenueCtx, {
     options: {
         responsive: true,
         plugins: {
-            legend: {
-                position: 'bottom',
-            }
+            legend: { position: 'bottom' }
         }
     }
 });
@@ -249,9 +260,7 @@ new Chart(ticketsCtx, {
     options: {
         responsive: true,
         plugins: {
-            legend: {
-                position: 'bottom',
-            }
+            legend: { position: 'bottom' }
         }
     }
 });
@@ -261,17 +270,17 @@ const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
 new Chart(monthlyCtx, {
     type: 'bar',
     data: {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
         datasets: [
             {
                 label: 'Revenue (GH₵)',
-                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, <?php echo $total_revenue; ?>],
+                data: [0,0,0,0,0,0,0,0,0,0,0,<?php echo $total_revenue; ?>],
                 backgroundColor: goldColor,
                 borderRadius: 8
             },
             {
                 label: 'Tickets Sold',
-                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, <?php echo $total_tickets; ?>],
+                data: [0,0,0,0,0,0,0,0,0,0,0,<?php echo $total_tickets; ?>],
                 backgroundColor: primaryColor,
                 borderRadius: 8
             }
@@ -279,15 +288,9 @@ new Chart(monthlyCtx, {
     },
     options: {
         responsive: true,
-        scales: {
-            y: {
-                beginAtZero: true
-            }
-        },
+        scales: { y: { beginAtZero: true } },
         plugins: {
-            legend: {
-                position: 'bottom',
-            }
+            legend: { position: 'bottom' }
         }
     }
 });

@@ -1,11 +1,14 @@
 <?php
 require_once '../settings/core.php';
 
-// Restrict to super admin only
-if (!isLoggedIn() || !isSuperAdmin()) {
+// Organizer only: user_role must be 1
+$user_role = $_SESSION['user_role'] ?? null;
+
+if (!isLoggedIn() || $user_role != 1) {
     header("Location: ../login/login.php?error=access_denied");
     exit();
 }
+
 
 // Fetch organizer's revenue data
 require_once '../controllers/order_controller.php';
@@ -27,7 +30,7 @@ $has_pending = has_pending_payment_request_ctr($organizer_id);
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Payment Requests - EventLink Admin</title>
+  <title>Payment Requests - EventLink Organizer</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -112,7 +115,7 @@ $has_pending = has_pending_payment_request_ctr($organizer_id);
         <div class="logo-circle">E</div>
         <div>
           <h5 class="mb-0" style="color: var(--el-navy); font-weight: 700;">EventLink</h5>
-          <small class="text-muted">Connecting Ghana's Events Digitally</small>
+          <small class="text-muted">Organizer - Payment Requests</small>
         </div>
       </div>
       <div class="d-flex gap-3">
@@ -131,15 +134,13 @@ $has_pending = has_pending_payment_request_ctr($organizer_id);
       <div class="sidebar">
         <div class="p-3">
           <h6 style="color: var(--el-gold); font-weight: 600; margin-bottom: 20px;">
-            <?php echo (function_exists('isSuperAdmin') && isSuperAdmin()) ? 'Super Admin Panel' : 'Organizer Panel'; ?>
+            Organizer Panel
           </h6>
         </div>
         <a href="payment_requests.php" class="sidebar-item active">
           <span></span> Payment Requests
         </a>
-        <a href="payment_approvals.php" class="sidebar-item">
-          <span></span> Payment Approvals
-        </a>
+        <!-- No Payment Approvals link here; that’s for Super Admin only -->
       </div>
     </div>
 
@@ -158,25 +159,33 @@ $has_pending = has_pending_payment_request_ctr($organizer_id);
         <div class="col-md-3 mb-3">
           <div class="revenue-card">
             <div style="font-size: 0.9rem; color: #6c757d; margin-bottom: 8px;">Total Tickets Sold</div>
-            <div style="font-size: 2rem; font-weight: 700; color: var(--el-navy);"><?php echo number_format($total_tickets); ?></div>
+            <div style="font-size: 2rem; font-weight: 700; color: var(--el-navy);">
+              <?php echo number_format($total_tickets); ?>
+            </div>
           </div>
         </div>
         <div class="col-md-3 mb-3">
           <div class="revenue-card">
             <div style="font-size: 0.9rem; color: #6c757d; margin-bottom: 8px;">Gross Revenue</div>
-            <div style="font-size: 2rem; font-weight: 700; color: var(--el-navy);">GH₵ <?php echo number_format($gross_revenue, 2); ?></div>
+            <div style="font-size: 2rem; font-weight: 700; color: var(--el-navy);">
+              GH₵ <?php echo number_format($gross_revenue, 2); ?>
+            </div>
           </div>
         </div>
         <div class="col-md-3 mb-3">
           <div class="revenue-card">
             <div style="font-size: 0.9rem; color: #6c757d; margin-bottom: 8px;">Commission (5%)</div>
-            <div style="font-size: 2rem; font-weight: 700; color: #dc3545;">- GH₵ <?php echo number_format($commission, 2); ?></div>
+            <div style="font-size: 2rem; font-weight: 700; color: #dc3545;">
+              - GH₵ <?php echo number_format($commission, 2); ?>
+            </div>
           </div>
         </div>
         <div class="col-md-3 mb-3">
           <div class="revenue-card">
             <div style="font-size: 0.9rem; color: #6c757d; margin-bottom: 8px;">Net Amount</div>
-            <div style="font-size: 2rem; font-weight: 700; color: #198754;">GH₵ <?php echo number_format($net_amount, 2); ?></div>
+            <div style="font-size: 2rem; font-weight: 700; color: #198754;">
+              GH₵ <?php echo number_format($net_amount, 2); ?>
+            </div>
           </div>
         </div>
       </div>
@@ -199,7 +208,9 @@ $has_pending = has_pending_payment_request_ctr($organizer_id);
           <form id="paymentRequestForm">
             <div class="row">
               <div class="col-md-6 mb-3">
-                <label for="payment_method" class="form-label">Payment Method <span class="text-danger">*</span></label>
+                <label for="payment_method" class="form-label">
+                  Payment Method <span class="text-danger">*</span>
+                </label>
                 <select id="payment_method" name="payment_method" class="form-select" required>
                   <option value="">Select payment method</option>
                   <option value="Mobile Money">Mobile Money (MTN/Vodafone/AirtelTigo)</option>
@@ -208,10 +219,20 @@ $has_pending = has_pending_payment_request_ctr($organizer_id);
                 </select>
               </div>
               <div class="col-md-6 mb-3">
-                <label for="account_details" class="form-label">Account Details <span class="text-danger">*</span></label>
-                <input type="text" id="account_details" name="account_details" class="form-control"
-                  placeholder="Phone number / Account number / Email" required>
-                <small class="text-muted">Enter your mobile money number, bank account, or PayPal email</small>
+                <label for="account_details" class="form-label">
+                  Account Details <span class="text-danger">*</span>
+                </label>
+                <input
+                  type="text"
+                  id="account_details"
+                  name="account_details"
+                  class="form-control"
+                  placeholder="Phone number / Account number / Email"
+                  required
+                >
+                <small class="text-muted">
+                  Enter your mobile money number, bank account, or PayPal email
+                </small>
               </div>
             </div>
 
@@ -220,7 +241,10 @@ $has_pending = has_pending_payment_request_ctr($organizer_id);
               Gross Revenue: <strong>GH₵ <?php echo number_format($gross_revenue, 2); ?></strong><br>
               Less Commission (5%): <strong class="text-danger">- GH₵ <?php echo number_format($commission, 2); ?></strong><br>
               <hr>
-              You will receive: <strong class="text-success" style="font-size: 1.2rem;">GH₵ <?php echo number_format($net_amount, 2); ?></strong>
+              You will receive:
+              <strong class="text-success" style="font-size: 1.2rem;">
+                GH₵ <?php echo number_format($net_amount, 2); ?>
+              </strong>
             </div>
 
             <button type="submit" class="btn el-btn-gold px-5">Submit Payment Request</button>

@@ -1,26 +1,30 @@
 <?php
 require_once '../settings/core.php';
 
-// Restrict to admins only
+// Restrict to admins only (organizers + super admins)
 if (!isLoggedIn() || !isAdmin()) {
     header("Location: ../login/login.php");
     exit();
 }
 
-// Fetch dashboard statistics
+// figure out role
+$user_role = $_SESSION['user_role'] ?? null;
+$is_super  = function_exists('isSuperAdmin') && isSuperAdmin();
+
+// Fetch dashboard statistics (currently per organizer)
 require_once '../controllers/product_controller.php';
 require_once '../controllers/order_controller.php';
 
-// Get logged-in organizer ID
+// Get logged-in organizer ID (for super_admin this may just show their own data)
 $organizer_id = $_SESSION['user_id'] ?? 0;
 
 // Get statistics filtered by organizer
-$total_tickets = get_total_tickets_sold_by_organizer_ctr($organizer_id);
-$total_revenue = get_total_revenue_by_organizer_ctr($organizer_id);
-$active_events = get_active_events_count_by_organizer_ctr($organizer_id);
+$total_tickets   = get_total_tickets_sold_by_organizer_ctr($organizer_id);
+$total_revenue   = get_total_revenue_by_organizer_ctr($organizer_id);
+$active_events   = get_active_events_count_by_organizer_ctr($organizer_id);
 
 // Get recent events with actual ticket counts (for this organizer only)
-$recent_events = get_recent_events_with_tickets_by_organizer_ctr($organizer_id, 3);
+$recent_events   = get_recent_events_with_tickets_by_organizer_ctr($organizer_id, 3);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -173,35 +177,46 @@ $recent_events = get_recent_events_with_tickets_by_organizer_ctr($organizer_id, 
   <div class="row">
     <!-- Sidebar -->
     <div class="col-md-3 col-lg-2 mb-4">
-      <div class="sidebar">
-        <div class="p-3">
-          <h6 style="color: var(--el-gold); font-weight: 600; margin-bottom: 20px;">Organizer Panel</h6>
-        </div>
-        <a href="dashboard.php" class="sidebar-item active">
-          <span></span> Overview
-        </a>
-        <a href="category.php" class="sidebar-item">
-          <span></span> Manage Categories
-        </a>
-        <a href="brand.php" class="sidebar-item">
-          <span></span> Manage Brands
-        </a>
-        <a href="product.php" class="sidebar-item">
-          <span></span> Manage Events
-        </a>
-        <a href="analytics.php" class="sidebar-item">
-          <span></span> Analytics
-        </a>
-        <?php if (function_exists('isSuperAdmin') && isSuperAdmin()): ?>
-        <a href="payment_requests.php" class="sidebar-item">
-          <span></span> Payment Requests
-        </a>
-        <a href="payment_approvals.php" class="sidebar-item">
-          <span></span> Payment Approvals
-        </a>
-        <?php endif; ?>
-      </div>
+  <div class="sidebar">
+    <div class="p-3">
+      <h6 style="color: var(--el-gold); font-weight: 600; margin-bottom: 20px;">
+        <?php echo $is_super ? 'Super Admin Panel' : 'Organizer Panel'; ?>
+      </h6>
     </div>
+
+    <?php if ($is_super): ?>
+      <!-- SUPER ADMIN MENU -->
+      <a href="dashboard.php" class="sidebar-item active">
+        <span></span> Overview
+      </a>
+      <a href="payment_approvals.php" class="sidebar-item">
+        <span></span> Payment Approvals
+      </a>
+
+    <?php elseif ($user_role == 1): ?>
+      <!-- ORGANIZER MENU (user_role = 1 only) -->
+      <a href="dashboard.php" class="sidebar-item active">
+        <span></span> Overview
+      </a>
+      <a href="category.php" class="sidebar-item">
+        <span></span> Manage Categories
+      </a>
+      <a href="brand.php" class="sidebar-item">
+        <span></span> Manage Brands
+      </a>
+      <a href="product.php" class="sidebar-item">
+        <span></span> Manage Events
+      </a>
+      <a href="analytics.php" class="sidebar-item">
+        <span></span> Analytics
+      </a>
+      <a href="payment_requests.php" class="sidebar-item">
+        <span></span> Payment Requests
+      </a>
+    <?php endif; ?>
+  </div>
+</div>
+
 
     <!-- Main Content -->
     <div class="col-md-9 col-lg-10">
@@ -262,8 +277,12 @@ $recent_events = get_recent_events_with_tickets_by_organizer_ctr($organizer_id, 
             <?php foreach ($recent_events as $event): ?>
               <div class="event-item">
                 <div>
-                  <h6 style="color: var(--el-navy); margin-bottom: 4px;"><?php echo htmlspecialchars($event['product_title']); ?></h6>
-                  <small class="text-muted"><?php echo number_format($event['tickets_sold']); ?> tickets sold</small>
+                  <h6 style="color: var(--el-navy); margin-bottom: 4px;">
+                    <?php echo htmlspecialchars($event['product_title']); ?>
+                  </h6>
+                  <small class="text-muted">
+                    <?php echo number_format($event['tickets_sold']); ?> tickets sold
+                  </small>
                 </div>
                 <a href="product.php" class="btn btn-sm btn-outline-primary">View</a>
               </div>

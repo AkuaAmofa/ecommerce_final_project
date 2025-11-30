@@ -151,14 +151,20 @@ $products   = get_products_by_organizer_ctr($user_id);
         <a href="analytics.php" class="sidebar-item">
           <span></span> Analytics
         </a>
-        <?php if (function_exists('isSuperAdmin') && isSuperAdmin()): ?>
-        <a href="payment_requests.php" class="sidebar-item">
-          <span></span> Payment Requests
-        </a>
-        <a href="payment_approvals.php" class="sidebar-item">
-          <span></span> Payment Approvals
-        </a>
-        <?php endif; ?>
+        <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] == 1): ?>
+    <!-- Organizer only -->
+    <a href="payment_requests.php" class="sidebar-item">
+        <span></span> Payment Requests
+    </a>
+<?php endif; ?>
+
+<?php if (function_exists('isSuperAdmin') && isSuperAdmin()): ?>
+    <!-- Super admin only -->
+    <a href="payment_approvals.php" class="sidebar-item">
+        <span></span> Payment Approvals
+    </a>
+<?php endif; ?>
+
       </div>
     </div>
 

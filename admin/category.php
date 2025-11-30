@@ -6,6 +6,10 @@ if (!isLoggedIn() || !isAdmin()) {
     header("Location: ../login/login.php");
     exit();
 }
+
+// Detect role
+$user_role = $_SESSION['user_role'] ?? null;
+$is_super  = function_exists('isSuperAdmin') && isSuperAdmin();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -119,12 +123,16 @@ if (!isLoggedIn() || !isAdmin()) {
 
 <div class="container-fluid px-4">
   <div class="row">
+
     <!-- Sidebar -->
     <div class="col-md-3 col-lg-2 mb-4">
       <div class="sidebar">
         <div class="p-3">
-          <h6 style="color: var(--el-gold); font-weight: 600; margin-bottom: 20px;">Organizer Panel</h6>
+          <h6 style="color: var(--el-gold); font-weight: 600; margin-bottom: 20px;">
+            <?php echo $is_super ? 'Super Admin Panel' : 'Organizer Panel'; ?>
+          </h6>
         </div>
+
         <a href="dashboard.php" class="sidebar-item">
           <span></span> Overview
         </a>
@@ -140,14 +148,21 @@ if (!isLoggedIn() || !isAdmin()) {
         <a href="analytics.php" class="sidebar-item">
           <span></span> Analytics
         </a>
-        <?php if (function_exists('isSuperAdmin') && isSuperAdmin()): ?>
-        <a href="payment_requests.php" class="sidebar-item">
-          <span></span> Payment Requests
-        </a>
-        <a href="payment_approvals.php" class="sidebar-item">
-          <span></span> Payment Approvals
-        </a>
+
+        <!-- ORGANIZER ONLY -->
+        <?php if ($user_role == 1): ?>
+          <a href="payment_requests.php" class="sidebar-item">
+            <span></span> Payment Requests
+          </a>
         <?php endif; ?>
+
+        <!-- SUPER ADMIN ONLY -->
+        <?php if ($is_super): ?>
+          <a href="payment_approvals.php" class="sidebar-item">
+            <span></span> Payment Approvals
+          </a>
+        <?php endif; ?>
+
       </div>
     </div>
 
