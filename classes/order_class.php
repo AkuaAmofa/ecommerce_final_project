@@ -324,4 +324,30 @@ class order_class extends db_connection {
             return 0.0;
         }
     }
+
+    /**
+     * Get recent events with ticket sales count
+     * @param int $limit - Number of events to return (default 3)
+     * @return array - Array of events with ticket counts
+     */
+    public function get_recent_events_with_tickets($limit = 3) {
+        try {
+            $limit = (int)$limit;
+            $sql = "SELECT
+                        p.product_id,
+                        p.product_title,
+                        COALESCE(SUM(od.qty), 0) as tickets_sold
+                    FROM products p
+                    LEFT JOIN orderdetails od ON p.product_id = od.product_id
+                    GROUP BY p.product_id, p.product_title
+                    ORDER BY p.product_id DESC
+                    LIMIT $limit";
+
+            $result = $this->db_fetch_all($sql);
+            return $result ?: [];
+        } catch (Exception $e) {
+            error_log("Error getting recent events with tickets: " . $e->getMessage());
+            return [];
+        }
+    }
 }

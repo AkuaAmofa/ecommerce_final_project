@@ -58,6 +58,9 @@ $(document).ready(function () {
     const price = $("#product_price").val().trim();
     const desc = $("#product_desc").val().trim();
     const keywords = $("#product_keywords").val().trim();
+    const location = $("#product_location").val().trim();
+    const event_date = $("#event_date").val();
+    const event_time = $("#event_time").val();
 
     // --- Basic Validation ---
     if (!title || !price || !cat_id || !brand_id) {
@@ -78,6 +81,9 @@ $(document).ready(function () {
     formData.append("product_desc", desc);
     formData.append("product_keywords", keywords);
     formData.append("product_image", uploadedImagePath);
+    formData.append("product_location", location);
+    formData.append("event_date", event_date);
+    formData.append("event_time", event_time);
 
     const actionUrl = isEditMode
       ? "../actions/update_product_action.php"
@@ -127,6 +133,9 @@ $(document).ready(function () {
     $("#product_keywords").val(btn.data("keywords"));
     $("#product_cat").val(btn.data("cat"));
     $("#product_brand").val(btn.data("brand"));
+    $("#product_location").val(btn.data("location"));
+    $("#event_date").val(btn.data("date"));
+    $("#event_time").val(btn.data("time"));
 
     $("#submitBtn").text("Update Product")
                    .removeClass("btn-primary")

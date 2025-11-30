@@ -15,6 +15,9 @@ require_once '../controllers/order_controller.php';
 $total_tickets = get_total_tickets_sold_ctr();
 $total_revenue = get_total_revenue_ctr();
 $active_events = get_active_events_count_ctr();
+
+// Get recent events with actual ticket counts
+$recent_events = get_recent_events_with_tickets_ctr(3);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -244,29 +247,21 @@ $active_events = get_active_events_count_ctr();
         <div class="card-body p-4">
           <h5 style="color: var(--el-navy); font-weight: 600; margin-bottom: 20px;">Recent Events</h5>
 
-          <div class="event-item">
-            <div>
-              <h6 style="color: var(--el-navy); margin-bottom: 4px;">Afrochella Music Festival 2025</h6>
-              <small class="text-muted">120 tickets sold</small>
+          <?php if (!empty($recent_events)): ?>
+            <?php foreach ($recent_events as $event): ?>
+              <div class="event-item">
+                <div>
+                  <h6 style="color: var(--el-navy); margin-bottom: 4px;"><?php echo htmlspecialchars($event['product_title']); ?></h6>
+                  <small class="text-muted"><?php echo number_format($event['tickets_sold']); ?> tickets sold</small>
+                </div>
+                <a href="product.php" class="btn btn-sm btn-outline-primary">View</a>
+              </div>
+            <?php endforeach; ?>
+          <?php else: ?>
+            <div class="text-center text-muted py-4">
+              <p>No events found. <a href="product.php">Create your first event</a></p>
             </div>
-            <a href="product.php" class="btn btn-sm btn-outline-primary">View</a>
-          </div>
-
-          <div class="event-item">
-            <div>
-              <h6 style="color: var(--el-navy); margin-bottom: 4px;">Ghana Tech Summit 2025</h6>
-              <small class="text-muted">120 tickets sold</small>
-            </div>
-            <a href="product.php" class="btn btn-sm btn-outline-primary">View</a>
-          </div>
-
-          <div class="event-item">
-            <div>
-              <h6 style="color: var(--el-navy); margin-bottom: 4px;">Homowo Cultural Festival</h6>
-              <small class="text-muted">120 tickets sold</small>
-            </div>
-            <a href="product.php" class="btn btn-sm btn-outline-primary">View</a>
-          </div>
+          <?php endif; ?>
         </div>
       </div>
     </div>

@@ -203,6 +203,22 @@ $products   = get_all_products_ctr();
       </div>
 
       <div class="mb-3">
+        <label for="product_location" class="form-label">Event Location</label>
+        <input type="text" id="product_location" name="product_location" class="form-control" placeholder="e.g. Accra International Conference Centre">
+      </div>
+
+      <div class="row mb-3">
+        <div class="col">
+          <label for="event_date" class="form-label">Event Date</label>
+          <input type="date" id="event_date" name="event_date" class="form-control">
+        </div>
+        <div class="col">
+          <label for="event_time" class="form-label">Event Time</label>
+          <input type="time" id="event_time" name="event_time" class="form-control">
+        </div>
+      </div>
+
+      <div class="mb-3">
         <label for="product_image" class="form-label">Product Image</label>
         <input type="file" id="product_image" name="product_image" class="form-control">
         <small class="text-muted">Allowed formats: JPG, PNG, GIF, WEBP.</small>
@@ -251,7 +267,10 @@ $products   = get_all_products_ctr();
                         data-desc="<?= htmlspecialchars($p['product_desc']); ?>"
                         data-keywords="<?= htmlspecialchars($p['product_keywords']); ?>"
                         data-cat="<?= $p['product_cat']; ?>"
-                        data-brand="<?= $p['product_brand']; ?>">
+                        data-brand="<?= $p['product_brand']; ?>"
+                        data-location="<?= htmlspecialchars($p['product_location'] ?? ''); ?>"
+                        data-date="<?= htmlspecialchars($p['event_date'] ?? ''); ?>"
+                        data-time="<?= htmlspecialchars($p['event_time'] ?? ''); ?>">
                         Edit
                 </button>
 

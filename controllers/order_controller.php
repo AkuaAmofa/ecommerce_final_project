@@ -114,3 +114,13 @@ function get_active_events_count_ctr() {
     $products = get_all_products_ctr();
     return count($products);
 }
+
+/**
+ * Get recent events with ticket sales count
+ * @param int $limit - Number of events to return (default 3)
+ * @return array - Array of events with ticket counts
+ */
+function get_recent_events_with_tickets_ctr($limit = 3) {
+    $ord = new order_class();
+    return $ord->get_recent_events_with_tickets($limit);
+}

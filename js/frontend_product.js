@@ -156,10 +156,57 @@ $(function () {
 
         console.debug('single product image ->', img, p.product_image);
 
+        // Format date and time
+        let eventDateDisplay = '';
+        let eventTimeDisplay = '';
+        let locationDisplay = '';
+
+        if (p.event_date) {
+          const dateObj = new Date(p.event_date);
+          eventDateDisplay = dateObj.toLocaleDateString('en-GB', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+          });
+        }
+
+        if (p.event_time) {
+          const timeStr = p.event_time;
+          const [hours, minutes] = timeStr.split(':');
+          const timeObj = new Date();
+          timeObj.setHours(parseInt(hours), parseInt(minutes));
+          eventTimeDisplay = timeObj.toLocaleTimeString('en-US', {
+            hour: 'numeric',
+            minute: '2-digit',
+            hour12: true
+          });
+        }
+
+        if (p.product_location) {
+          locationDisplay = escapeHtml(p.product_location);
+        }
+
+        let eventDetailsHtml = '';
+        if (eventDateDisplay || eventTimeDisplay || locationDisplay) {
+          eventDetailsHtml = '<div class="event-meta-info mb-4 p-3 bg-light rounded">';
+          if (eventDateDisplay) {
+            eventDetailsHtml += `<p class="mb-2"><strong>📅 Date:</strong> ${eventDateDisplay}</p>`;
+          }
+          if (eventTimeDisplay) {
+            eventDetailsHtml += `<p class="mb-2"><strong>🕒 Time:</strong> ${eventTimeDisplay}</p>`;
+          }
+          if (locationDisplay) {
+            eventDetailsHtml += `<p class="mb-0"><strong>📍 Location:</strong> ${locationDisplay}</p>`;
+          }
+          eventDetailsHtml += '</div>';
+        }
+
         const html = `
           <h2 class="mb-3">${escapeHtml(p.product_title)}</h2>
           <p class="text-muted mb-3">${escapeHtml(p.cat_name)} · ${escapeHtml(p.brand_name)}</p>
           <img src="${img}" class="img-fluid rounded mb-3" alt="${escapeHtml(p.product_title)}">
+          ${eventDetailsHtml}
           <p>${escapeHtml(p.product_desc || 'No description available.')}</p>
         `;
         $('#eventContent').html(html);

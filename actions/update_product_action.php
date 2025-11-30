@@ -17,6 +17,9 @@ $price        = isset($_POST['product_price']) ? floatval($_POST['product_price'
 $desc         = isset($_POST['product_desc']) ? trim($_POST['product_desc']) : '';
 $keywords     = isset($_POST['product_keywords']) ? trim($_POST['product_keywords']) : '';
 $image        = $_POST['product_image'] ?? ''; // from upload or existing filename
+$location     = isset($_POST['product_location']) ? trim($_POST['product_location']) : '';
+$event_date   = $_POST['event_date'] ?? '';
+$event_time   = $_POST['event_time'] ?? '';
 
 // Basic validation
 if ($product_id <= 0 || empty($title) || $price <= 0) {
@@ -29,10 +32,32 @@ if ($product_id <= 0 || empty($title) || $price <= 0) {
 
 // Handle direct image upload (optional)
 if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] === UPLOAD_ERR_OK) {
-    $upload_dir = "/home/akua.amofa/public_html/uploads/";
+    // Determine if we're on the server or local
+    $is_server = strpos(__DIR__, '/home/akua.amofa') !== false;
+
+    if ($is_server) {
+        // On production server - use absolute path
+        $upload_dir = '/home/akua.amofa/public_html/uploads';
+    } else {
+        // On local development - use relative path
+        $uploads_path = __DIR__ . '/../uploads/';
+        $upload_dir = realpath($uploads_path);
+
+        if (!$upload_dir) {
+            if (!mkdir($uploads_path, 0755, true) && !is_dir($uploads_path)) {
+                echo json_encode([
+                    'status'  => 'error',
+                    'message' => 'Upload directory not found and could not be created.'
+                ]);
+                exit();
+            }
+            $upload_dir = realpath($uploads_path);
+        }
+    }
+
     $originalName = basename($_FILES['product_image']['name']);
     $uniqueName = "prod_" . uniqid() . "_" . $originalName;
-    $targetPath = $upload_dir . $uniqueName;
+    $targetPath = $upload_dir . DIRECTORY_SEPARATOR . $uniqueName;
 
     if (move_uploaded_file($_FILES['product_image']['tmp_name'], $targetPath)) {
         $image = $uniqueName; // store only filename
@@ -46,7 +71,7 @@ if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] === UPL
 }
 
 // Run update query via controller
-$result = update_product_ctr($product_id, $product_cat, $product_brand, $title, $price, $desc, $image, $keywords);
+$result = update_product_ctr($product_id, $product_cat, $product_brand, $title, $price, $desc, $image, $keywords, $location, $event_date, $event_time);
 
 if ($result) {
     echo json_encode([

@@ -7,25 +7,28 @@ class product_class extends db_connection
      * ADD PRODUCT
      * ----------------------------------------------------------------
      */
-    public function add_product($cat_id, $brand_id, $title, $price, $desc, $image, $keywords)
+    public function add_product($cat_id, $brand_id, $title, $price, $desc, $image, $keywords, $location, $event_date, $event_time)
     {
         $conn = $this->db_conn();
         if (!$conn) return false;
 
-        $sql = "INSERT INTO products 
-                (product_cat, product_brand, product_title, product_price, product_desc, product_image, product_keywords)
-                VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO products
+                (product_cat, product_brand, product_title, product_price, product_desc, product_image, product_keywords, product_location, event_date, event_time)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
         if (!$stmt) return false;
 
-        $stmt->bind_param("iisdsss",
+        $stmt->bind_param("iisdssssss",
             $cat_id,
             $brand_id,
             $title,
             $price,
             $desc,
             $image,
-            $keywords
+            $keywords,
+            $location,
+            $event_date,
+            $event_time
         );
 
         $ok = $stmt->execute();
@@ -38,24 +41,27 @@ class product_class extends db_connection
      * UPDATE PRODUCT (for edit)
      * ----------------------------------------------------------------
      */
-    public function update_product($product_id, $cat_id, $brand_id, $title, $price, $desc, $image, $keywords)
+    public function update_product($product_id, $cat_id, $brand_id, $title, $price, $desc, $image, $keywords, $location, $event_date, $event_time)
     {
         $conn = $this->db_conn();
         if (!$conn) return false;
 
-        $sql = "UPDATE products 
-                   SET product_cat = ?, 
-                       product_brand = ?, 
-                       product_title = ?, 
-                       product_price = ?, 
-                       product_desc = ?, 
-                       product_image = ?, 
-                       product_keywords = ?
+        $sql = "UPDATE products
+                   SET product_cat = ?,
+                       product_brand = ?,
+                       product_title = ?,
+                       product_price = ?,
+                       product_desc = ?,
+                       product_image = ?,
+                       product_keywords = ?,
+                       product_location = ?,
+                       event_date = ?,
+                       event_time = ?
                  WHERE product_id = ?";
         $stmt = $conn->prepare($sql);
         if (!$stmt) return false;
 
-        $stmt->bind_param("iisdsssi",
+        $stmt->bind_param("iisdssssssi",
             $cat_id,
             $brand_id,
             $title,
@@ -63,6 +69,9 @@ class product_class extends db_connection
             $desc,
             $image,
             $keywords,
+            $location,
+            $event_date,
+            $event_time,
             $product_id
         );
 

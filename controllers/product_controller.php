@@ -4,17 +4,17 @@ require_once dirname(__DIR__) . '/classes/product_class.php';
 /**
  * Add a new product
  */
-function add_product_ctr($cat_id, $brand_id, $title, $price, $desc, $image, $keywords) {
+function add_product_ctr($cat_id, $brand_id, $title, $price, $desc, $image, $keywords, $location, $event_date, $event_time) {
     $product = new product_class();
-    return $product->add_product($cat_id, $brand_id, $title, $price, $desc, $image, $keywords);
+    return $product->add_product($cat_id, $brand_id, $title, $price, $desc, $image, $keywords, $location, $event_date, $event_time);
 }
 
 /**
  * Update an existing product
  */
-function update_product_ctr($product_id, $cat_id, $brand_id, $title, $price, $desc, $image, $keywords) {
+function update_product_ctr($product_id, $cat_id, $brand_id, $title, $price, $desc, $image, $keywords, $location, $event_date, $event_time) {
     $product = new product_class();
-    return $product->update_product($product_id, $cat_id, $brand_id, $title, $price, $desc, $image, $keywords);
+    return $product->update_product($product_id, $cat_id, $brand_id, $title, $price, $desc, $image, $keywords, $location, $event_date, $event_time);
 }
 
 /**
