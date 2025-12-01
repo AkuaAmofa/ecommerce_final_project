@@ -55,21 +55,21 @@ function getUserEmail(): ?string {
  * 2 = super admin
  */
 function get_user_role(): ?int {
-    return isLoggedIn() ? ($_SESSION['user_role'] ?? null) : null;
+    return isLoggedIn() ? ($_SESSION['role'] ?? null) : null;
 }
 
 /**
  * Is organizer (role = 1)?
  */
 function isOrganizer(): bool {
-    return isLoggedIn() && isset($_SESSION['user_role']) && (int)$_SESSION['user_role'] === 1;
+    return isLoggedIn() && isset($_SESSION['role']) && (int)$_SESSION['role'] === 1;
 }
 
 /**
- * Is super admin (role = 2)?
+ * Is super admin (super_admin = 1)?
  */
 function isSuperAdmin(): bool {
-    return isLoggedIn() && isset($_SESSION['user_role']) && (int)$_SESSION['user_role'] === 2;
+    return isLoggedIn() && isset($_SESSION['super_admin']) && (int)$_SESSION['super_admin'] === 1;
 }
 
 /**

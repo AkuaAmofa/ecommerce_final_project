@@ -1,8 +1,8 @@
 <?php
 require_once '../settings/core.php';
 
-// Organizer only: user_role must be 1
-$user_role = $_SESSION['user_role'] ?? null;
+// Allow anyone with user_role = 1 (organizers and super admin)
+$user_role = $_SESSION['role'] ?? null; // Note: session stores it as 'role', not 'user_role'
 
 if (!isLoggedIn() || $user_role != 1) {
     header("Location: ../login/login.php?error=access_denied");
@@ -137,10 +137,24 @@ $has_pending = has_pending_payment_request_ctr($organizer_id);
             Organizer Panel
           </h6>
         </div>
+        <a href="dashboard.php" class="sidebar-item">
+          <span></span> Overview
+        </a>
+        <a href="category.php" class="sidebar-item">
+          <span></span> Manage Categories
+        </a>
+        <a href="brand.php" class="sidebar-item">
+          <span></span> Manage Brands
+        </a>
+        <a href="product.php" class="sidebar-item">
+          <span></span> Manage Events
+        </a>
+        <a href="analytics.php" class="sidebar-item">
+          <span></span> Analytics
+        </a>
         <a href="payment_requests.php" class="sidebar-item active">
           <span></span> Payment Requests
         </a>
-        <!-- No Payment Approvals link here; that’s for Super Admin only -->
       </div>
     </div>
 

@@ -6,11 +6,13 @@ session_start();
 require_once '../controllers/payment_request_controller.php';
 require_once '../settings/core.php';
 
-// Check if user is logged in and is a super admin
-if (!isLoggedIn() || !isSuperAdmin()) {
+// Allow anyone with user_role = 1 (organizers and super admin)
+$user_role = $_SESSION['role'] ?? null; // Note: session stores it as 'role', not 'user_role'
+
+if (!isLoggedIn() || $user_role != 1) {
     echo json_encode([
         'status' => 'error',
-        'message' => 'Access denied. Super admin access required.'
+        'message' => 'Access denied. User role 1 required.'
     ]);
     exit();
 }

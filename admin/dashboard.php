@@ -8,7 +8,7 @@ if (!isLoggedIn() || !isAdmin()) {
 }
 
 // figure out role
-$user_role = $_SESSION['user_role'] ?? null;
+$user_role = $_SESSION['role'] ?? null; // Note: session stores it as 'role', not 'user_role'
 $is_super  = function_exists('isSuperAdmin') && isSuperAdmin();
 
 // Fetch dashboard statistics (currently per organizer)
@@ -189,12 +189,15 @@ $recent_events   = get_recent_events_with_tickets_by_organizer_ctr($organizer_id
       <a href="dashboard.php" class="sidebar-item active">
         <span></span> Overview
       </a>
+      <a href="payment_requests.php" class="sidebar-item">
+        <span></span> Payment Requests
+      </a>
       <a href="payment_approvals.php" class="sidebar-item">
         <span></span> Payment Approvals
       </a>
 
-    <?php elseif ($user_role == 1): ?>
-      <!-- ORGANIZER MENU (user_role = 1 only) -->
+    <?php else: ?>
+      <!-- ORGANIZER MENU (role 1, not super admin) -->
       <a href="dashboard.php" class="sidebar-item active">
         <span></span> Overview
       </a>
@@ -255,15 +258,21 @@ $recent_events   = get_recent_events_with_tickets_by_organizer_ctr($organizer_id
         <div class="card-body p-4">
           <h5 style="color: var(--el-navy); font-weight: 600; margin-bottom: 20px;">Quick Actions</h5>
           <div class="d-flex gap-3 flex-wrap">
-            <a href="product.php" class="btn btn-gold quick-action-btn">
-               Create New Event
+            <!-- Show Payment Request button for all user_role=1 -->
+            <a href="payment_requests.php" class="btn btn-gold quick-action-btn">
+              Request Payment
             </a>
-            <a href="analytics.php" class="btn btn-outline-secondary quick-action-btn">
-              View Reports
-            </a>
-            <a href="category.php" class="btn btn-outline-secondary quick-action-btn">
-              Manage Categories
-            </a>
+            <?php if (!$is_super): ?>
+              <a href="product.php" class="btn btn-gold quick-action-btn">
+                 Create New Event
+              </a>
+              <a href="analytics.php" class="btn btn-outline-secondary quick-action-btn">
+                View Reports
+              </a>
+              <a href="category.php" class="btn btn-outline-secondary quick-action-btn">
+                Manage Categories
+              </a>
+            <?php endif; ?>
           </div>
         </div>
       </div>
